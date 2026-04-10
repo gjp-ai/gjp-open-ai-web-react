@@ -1,0 +1,22 @@
+const articlesTranslations = {
+  'articles.title': { EN: 'Latest Articles', ZH: '文章精选' },
+  'articles.subtitle': { EN: 'Read curated content in tech and AI.', ZH: '阅读科技与人工智能领域的精选内容。' },
+  'articles.empty': { EN: 'No articles match your search.', ZH: '未找到匹配的文章。' },
+  'articles.tags_filter': { EN: 'Filter by tag', ZH: '按标签筛选' },
+  'articles.filters.all': { EN: 'All', ZH: '全部' },
+  'articles.search_clear': { EN: 'Clear search', ZH: '清除搜索' },
+  'articles.sort_label': { EN: 'Sort articles', ZH: '排序文章' },
+  'articles.sort.displayOrder': { EN: 'Default Order', ZH: '默认排序' },
+  'articles.sort.alpha': { EN: 'Alphabetical', ZH: '按字母排序' },
+  'articles.sort.recency': { EN: 'Most Recent', ZH: '最新优先' },
+  'articles.back_to_list': { EN: 'Back to Articles', ZH: '返回文章列表' },
+  'articles.invalid_id': { EN: 'Invalid article ID', ZH: '无效的文章ID' },
+  'articles.source': { EN: 'Source', ZH: '来源' },
+  'articles.view_original': { EN: 'View Original Article', ZH: '查看原文' },
+  'article.read_more': { EN: 'Read more', ZH: '阅读全文' },
+  'article.read_on': { EN: 'Read on {source}', ZH: '在 {source} 阅读' },
+  'articles.tags': { EN: 'Tags', ZH: '标签' },
+  'articles.updateAt': { EN: 'Updated At', ZH: '更新于' },
+}
+
+export default articlesTranslations

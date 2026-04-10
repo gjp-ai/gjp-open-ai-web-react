@@ -1,0 +1,175 @@
+/* Shared toolbar */
+.toolbar {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 1rem;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0;
+  margin: 0;
+}
+
+.toolbar__search {
+  /* hidden because search is provided via the icon button at the end of the tags row */
+  display: none;
+}
+
+.toolbar__search-icon {
+  color: var(--color-muted);
+}
+
+.toolbar__search-input {
+  border: none;
+  background: transparent;
+  width: 100%;
+  font-size: 0.95rem;
+  color: var(--color-text);
+}
+
+.toolbar__search-input:focus {
+  outline: none;
+}
+
+.toolbar__clear {
+  border: none;
+  background: transparent;
+  color: var(--color-muted);
+  font-size: 1.1rem;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0 0.2rem;
+}
+
+.toolbar__clear:hover,
+.toolbar__clear:focus {
+  color: var(--color-primary);
+  outline: none;
+}
+
+/* Center area inside toolbar to host scrollable tags */
+.toolbar__tags-wrapper {
+  /* Expand to fill available toolbar space. Tags scroll while actions stay fixed. */
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.toolbar__tags {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  /* take remaining space and allow horizontal scroll */
+  flex: 1 1 auto;
+  min-width: 0; /* allow overflow to work on flex children */
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 0.25rem 0.5rem 0.25rem 0.25rem;
+  scrollbar-width: thin;
+  /* ensure last chips are visible when actions sit to the right */
+  padding-right: 3.5rem;
+}
+
+/* Hide scrollbar in WebKit while keeping scrollability */
+.toolbar__tags::-webkit-scrollbar {
+  height: 8px;
+}
+.toolbar__tags::-webkit-scrollbar-thumb {
+  background: rgba(0,0,0,0.08);
+  border-radius: 999px;
+}
+.toolbar__tags::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Actions at the end of the tags row */
+.toolbar__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-left: 0.5rem;
+  position: relative; /* anchor for menus */
+  flex: 0 0 auto; /* keep actions fixed and not part of the scrollable area */
+  z-index: 50; /* keep above tags if overlapping */
+}
+
+.toolbar-icon-button {
+  border: none;
+  background: transparent;
+  padding: 0.25rem 0.45rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-muted);
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+}
+.toolbar-icon-button:hover,
+.toolbar-icon-button:focus {
+  color: var(--color-primary);
+  background: rgba(37,99,235,0.04);
+  outline: none;
+}
+
+.toolbar-inline-search__box {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin-left: 0.5rem;
+  background: var(--color-surface-alt);
+  padding: 0.25rem 0.5rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+}
+
+.toolbar-sort-menu .sort-menu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 8px);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-sm);
+  padding: 0.25rem;
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  min-width: 9rem;
+}
+
+.sort-menu__item {
+  border: none;
+  background: transparent;
+  text-align: left;
+  padding: 0.45rem 0.6rem;
+  color: var(--color-text);
+  cursor: pointer;
+  font-size: 0.95rem;
+}
+.sort-menu__item.active {
+  background: rgba(37,99,235,0.06);
+}
+.sort-menu__item:hover,
+.sort-menu__item:focus {
+  background: rgba(37,99,235,0.04);
+  outline: none;
+}
+
+.chip {
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-primary);
+  padding: 0.35rem 0.85rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: color 0.2s ease, border 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+  white-space: nowrap;
+}
+
+.chip--active {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: #ffffff;
+}
