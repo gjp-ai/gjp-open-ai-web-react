@@ -12,9 +12,7 @@ const sectionLinks = [
   { path: '/public/questions', label: { EN: 'Q&A', ZH: '问答' }, tagsKey: 'question_tags' },
   { path: '/public/articles', label: { EN: 'Articles', ZH: '文章' }, tagsKey: 'article_tags' },
   { path: '/public/images', label: { EN: 'Images', ZH: '图片' }, tagsKey: 'image_tags' },
-  { path: '/public/audios', label: { EN: 'Audios', ZH: '音频' }, tagsKey: 'audio_tags' },
   { path: '/public/videos', label: { EN: 'Videos', ZH: '视频' }, tagsKey: 'video_tags' },
-  { path: '/public/files', label: { EN: 'Files', ZH: '文件' }, tagsKey: 'file_tags' },
 ]
 
 export const PublicLayout = () => {
@@ -130,7 +128,7 @@ export const PublicLayout = () => {
         </button>
 
         <NavLink to="/public/websites" className="site-logo">
-          <img src="/favicon.ico" alt="Site logo" className="site-logo__img" />
+          <img src={`${import.meta.env.BASE_URL}favicon.ico`} alt="Site logo" className="site-logo__img" />
         </NavLink>
 
         {/* Desktop navigation */}

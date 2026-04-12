@@ -58,5 +58,5 @@ export const router = createBrowserRouter([
     element: <NotFoundPage />,
   },
 ], {
-  basename: '/',
+  basename: import.meta.env.BASE_URL,
 })
