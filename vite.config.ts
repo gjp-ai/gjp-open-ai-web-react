@@ -9,7 +9,7 @@ export default defineConfig({
     host: true,
     cors: true,
     proxy: {
-      '/ai-api': {
+      '/gjp-api': {
         target: 'https://www.ganjianping.com',
         // target: 'http://localhost:8084',
         changeOrigin: true,
