@@ -19,9 +19,9 @@ interface UIContextValue {
 
 const UIContext = createContext<UIContextValue | undefined>(undefined)
 
-const THEME_STORAGE_KEY = 'gjpb.theme'
-const LANGUAGE_STORAGE_KEY = 'gjpb.language'
-const THEME_COLOR_STORAGE_KEY = 'gjpb.themeColor'
+const THEME_STORAGE_KEY = 'gjp.theme'
+const LANGUAGE_STORAGE_KEY = 'gjp.language'
+const THEME_COLOR_STORAGE_KEY = 'gjp.themeColor'
 
 const getPreferredTheme = (): ThemeMode => {
   if (typeof window === 'undefined') {

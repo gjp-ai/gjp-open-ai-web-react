@@ -8,11 +8,11 @@ import { useAppSettings } from '../../shared/contexts/AppSettingsContext'
 import { useUIContext } from '../../shared/contexts/UIContext'
 
 const sectionLinks = [
-  { path: '/public/websites', label: { EN: 'Websites', ZH: '网站' }, tagsKey: 'website_tags' },
-  { path: '/public/questions', label: { EN: 'Q&A', ZH: '问答' }, tagsKey: 'question_tags' },
-  { path: '/public/articles', label: { EN: 'Articles', ZH: '文章' }, tagsKey: 'article_tags' },
-  { path: '/public/images', label: { EN: 'Images', ZH: '图片' }, tagsKey: 'image_tags' },
-  { path: '/public/videos', label: { EN: 'Videos', ZH: '视频' }, tagsKey: 'video_tags' },
+  { path: '/websites', label: { EN: 'Websites', ZH: '网站' }, tagsKey: 'website_tags' },
+  { path: '/questions', label: { EN: 'Q&A', ZH: '问答' }, tagsKey: 'question_tags' },
+  { path: '/articles', label: { EN: 'Articles', ZH: '文章' }, tagsKey: 'article_tags' },
+  { path: '/images', label: { EN: 'Images', ZH: '图片' }, tagsKey: 'image_tags' },
+  { path: '/videos', label: { EN: 'Videos', ZH: '视频' }, tagsKey: 'video_tags' },
 ]
 
 export const PublicLayout = () => {
@@ -127,7 +127,7 @@ export const PublicLayout = () => {
           </svg>
         </button>
 
-        <NavLink to="/public/websites" className="site-logo">
+        <NavLink to="/websites" className="site-logo">
           <img src={`${import.meta.env.BASE_URL}favicon.ico`} alt="Site logo" className="site-logo__img" />
         </NavLink>
 

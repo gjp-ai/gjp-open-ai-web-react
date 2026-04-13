@@ -12,43 +12,43 @@ import { NotFoundPage } from '../shared/components/NotFoundPage'
 
 export const router = createBrowserRouter([
   {
-    path: '/',
+    path: '',
     element: <PublicLayout />,
     children: [
       {
         index: true,
-        element: <Navigate to="public/websites" replace />,
+        element: <Navigate to="/websites" replace />,
       },
       {
-        path: 'public/websites',
+        path: '/websites',
         element: <WebsitesPage />,
       },
       {
-        path: 'public/questions',
+        path: '/questions',
         element: <QuestionsPage />,
       },
       {
-        path: 'public/articles',
+        path: '/articles',
         element: <ArticlesPage />,
       },
       {
-        path: 'public/articles/:id',
+        path: '/articles/:id',
         element: <ArticleDetailPage />,
       },
       {
-        path: 'public/images',
+        path: '/images',
         element: <ImagesPage />,
       },
       {
-        path: 'public/audios',
+        path: '/audios',
         element: <AudiosPage />,
       },
       {
-        path: 'public/videos',
+        path: '/videos',
         element: <VideosPage />,
       },
       {
-        path: 'public/files',
+        path: '/files',
         element: <FilesPage />,
       },
     ],

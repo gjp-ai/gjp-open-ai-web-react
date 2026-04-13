@@ -36,8 +36,8 @@ export const AppSettingsProvider = ({ children }: { children: ReactNode }) => {
     setError(null)
     try {
       // Try to load cached settings from localStorage first for instant availability
-      const cacheKey = 'gjpb_app_settings'
-      const fetchedFlag = 'gjpb_app_settings_fetched'
+      const cacheKey = 'gjpapp_settings'
+      const fetchedFlag = 'gjpapp_settings_fetched'
 
       try {
         const cached = localStorage.getItem(cacheKey)
@@ -151,14 +151,14 @@ export const AppSettingsProvider = ({ children }: { children: ReactNode }) => {
           const response = await getAppSettings()
           setSettings(response.data)
           try {
-            localStorage.setItem('gjpb_app_settings', JSON.stringify(response.data))
+            localStorage.setItem('gjpapp_settings', JSON.stringify(response.data))
           } catch (err) {
             // ignore
             // eslint-disable-next-line no-console
             console.warn('Failed to write app settings to localStorage', err)
           }
           try {
-            sessionStorage.setItem('gjpb_app_settings_fetched', '1')
+            sessionStorage.setItem('gjpapp_settings_fetched', '1')
           } catch {
             // ignore
           }
