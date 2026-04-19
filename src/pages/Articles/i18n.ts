@@ -17,6 +17,8 @@ const articlesTranslations = {
   'article.read_on': { EN: 'Read on {source}', ZH: '在 {source} 阅读' },
   'articles.tags': { EN: 'Tags', ZH: '标签' },
   'articles.updateAt': { EN: 'Updated At', ZH: '更新于' },
+  'articles.hide_cover': { EN: 'Hide cover image', ZH: '隐藏封面图' },
+  'articles.show_cover': { EN: 'Show cover image', ZH: '显示封面图' },
 }
 
 export default articlesTranslations

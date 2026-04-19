@@ -1,5 +1,5 @@
 import { type ChangeEvent, useEffect, useMemo, useState } from 'react'
-import { getFiles } from '../../shared/data/publicApi'
+import { getFiles } from '../../shared/data/openApi'
 import type { FileItem } from '../../shared/data/types'
 import { useUIContext } from '../../shared/contexts/UIContext'
 import { useT } from '../../shared/i18n'
@@ -95,11 +95,11 @@ export const FilesPage = () => {
     () => {
       const trimmedQuery = searchQuery.trim()
       let filtered = items.filter((item) => item.lang === language)
-      
+
       if (trimmedQuery) {
         filtered = filtered.filter((item) => matchesSearch(item, trimmedQuery))
       }
-      
+
       if (selectedTag) {
         filtered = filtered.filter((item) => hasTag(item, selectedTag))
       }
@@ -201,9 +201,9 @@ export const FilesPage = () => {
               {t('files.empty')}
             </div>
           ) : null}
-          <Pagination 
-            currentPage={currentPage} 
-            totalPages={totalPages} 
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
             onPageChange={setCurrentPage}
             totalElements={totalElements}
             pageSize={pageSize}

@@ -1,5 +1,5 @@
 import { type ChangeEvent, useEffect, useMemo, useState } from 'react'
-import { getWebsites } from '../../shared/data/publicApi'
+import { getWebsites } from '../../shared/data/openApi'
 import type { Website } from '../../shared/data/types'
 import { useUIContext } from '../../shared/contexts/UIContext'
 import { useAppSettings } from '../../shared/contexts/AppSettingsContext'
@@ -95,11 +95,11 @@ export const WebsitesPage = () => {
     () => {
       const trimmedQuery = searchQuery.trim()
       let filtered = items.filter((item) => item.lang === language)
-      
+
       if (trimmedQuery) {
         filtered = filtered.filter((item) => matchesSearch(item, trimmedQuery))
       }
-      
+
       if (selectedTag) {
         filtered = filtered.filter((item) => hasTag(item, selectedTag))
       }
@@ -204,9 +204,9 @@ export const WebsitesPage = () => {
             ))}
           </div>
           {displayItems.length === 0 ? <div className="status status--empty">{t('websites.empty')}</div> : null}
-          <Pagination 
-            currentPage={currentPage} 
-            totalPages={totalPages} 
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
             onPageChange={setCurrentPage}
             totalElements={totalElements}
             pageSize={pageSize}

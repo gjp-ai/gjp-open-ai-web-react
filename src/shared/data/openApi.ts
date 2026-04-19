@@ -15,7 +15,7 @@ const PROD_DEFAULT_BASE_URL = 'https://www.ganjianping.com/gjp-api/open/'
 
 const fallbackBaseUrl = import.meta.env.DEV ? DEV_DEFAULT_BASE_URL : PROD_DEFAULT_BASE_URL
 
-const configuredBaseUrl = (import.meta.env.VITE_PUBLIC_API_BASE_URL as string | undefined) ?? fallbackBaseUrl
+const configuredBaseUrl = (import.meta.env.VITE_OPEN_API_BASE_URL as string | undefined) ?? fallbackBaseUrl
 
 const API_BASE_URL = configuredBaseUrl.endsWith('/') ? configuredBaseUrl : `${configuredBaseUrl}/`
 

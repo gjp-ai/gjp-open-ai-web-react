@@ -1,5 +1,5 @@
 import { type ChangeEvent, useEffect, useMemo, useState } from 'react'
-import { getQuestions } from '../../shared/data/publicApi'
+import { getQuestions } from '../../shared/data/openApi'
 import type { Question } from '../../shared/data/types'
 import { useUIContext } from '../../shared/contexts/UIContext'
 import { useAppSettings } from '../../shared/contexts/AppSettingsContext'
@@ -95,11 +95,11 @@ export const QuestionsPage = () => {
     () => {
       const trimmedQuery = searchQuery.trim()
       let filtered = items.filter((item) => item.lang === language)
-      
+
       if (trimmedQuery) {
         filtered = filtered.filter((item) => matchesSearch(item, trimmedQuery))
       }
-      
+
       if (selectedTag) {
         filtered = filtered.filter((item) => hasTag(item, selectedTag))
       }

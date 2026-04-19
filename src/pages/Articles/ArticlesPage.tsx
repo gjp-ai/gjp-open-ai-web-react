@@ -1,5 +1,5 @@
 import { type ChangeEvent, useEffect, useMemo, useState } from 'react'
-import { getArticles } from '../../shared/data/publicApi'
+import { getArticles } from '../../shared/data/openApi'
 import type { ArticleSummary } from '../../shared/data/types'
 import { useUIContext } from '../../shared/contexts/UIContext'
 import { useT } from '../../shared/i18n'
@@ -96,11 +96,11 @@ export const ArticlesPage = () => {
     () => {
       const trimmedQuery = searchQuery.trim()
       let filtered = items.filter((item) => item.lang === language)
-      
+
       if (trimmedQuery) {
         filtered = filtered.filter((item) => matchesSearch(item, trimmedQuery))
       }
-      
+
       if (selectedTag) {
         filtered = filtered.filter((item) => hasTag(item, selectedTag))
       }
@@ -203,9 +203,9 @@ export const ArticlesPage = () => {
             ))}
           </div>
           {displayItems.length === 0 ? <div className="status status--empty">{t('articles.empty')}</div> : null}
-          <Pagination 
-            currentPage={currentPage} 
-            totalPages={totalPages} 
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
             onPageChange={setCurrentPage}
             totalElements={totalElements}
             pageSize={pageSize}

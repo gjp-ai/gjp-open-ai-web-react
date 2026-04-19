@@ -7,7 +7,7 @@ import {
   useState,
   type ReactNode,
 } from 'react'
-import { getAppSettings } from '../data/publicApi'
+import { getAppSettings } from '../data/openApi'
 import type { AppSetting } from '../data/types'
 import { useUIContext, type LanguageCode } from './UIContext'
 import { useT } from '../i18n'

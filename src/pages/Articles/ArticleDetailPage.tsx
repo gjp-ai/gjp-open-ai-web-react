@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import hljs from 'highlight.js'
 import 'highlight.js/styles/github.css'
 import { useParams, Link } from 'react-router-dom'
-import { getArticleById } from '../../shared/data/publicApi'
+import { getArticleById } from '../../shared/data/openApi'
 import type { ArticleDetail } from '../../shared/data/types'
 import { useT } from '../../shared/i18n'
 import './articles.css'
@@ -12,6 +12,7 @@ export const ArticleDetailPage = () => {
   const [article, setArticle] = useState<ArticleDetail | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [coverVisible, setCoverVisible] = useState(true)
   const t = useT()
   const invalidIdMessage = t('articles.invalid_id')
   const failedToLoadMessage = t('failed_to_load')
@@ -67,11 +68,11 @@ export const ArticleDetailPage = () => {
           if (pre instanceof HTMLElement) {
             // Mark this pre block as processed
             pre.classList.add('code-block-with-copy')
-            
+
             // Create wrapper div
             const wrapper = document.createElement('div')
             wrapper.className = 'code-block-wrapper'
-            
+
             // Create copy button
             const copyButton = document.createElement('button')
             copyButton.className = 'code-copy-button'
@@ -84,14 +85,14 @@ export const ArticleDetailPage = () => {
               <span class="copied-text" style="display: none;">Copied!</span>
             `
             copyButton.setAttribute('aria-label', 'Copy code')
-            
+
             // Add click handler
             copyButton.addEventListener('click', async () => {
               const codeElement = pre.querySelector('code')
               if (codeElement) {
                 try {
                   await navigator.clipboard.writeText(codeElement.textContent || '')
-                  
+
                   // Show "Copied!" feedback
                   const copyText = copyButton.querySelector('.copy-text')
                   const copiedText = copyButton.querySelector('.copied-text')
@@ -99,7 +100,7 @@ export const ArticleDetailPage = () => {
                     copyText.setAttribute('style', 'display: none;')
                     copiedText.setAttribute('style', 'display: inline;')
                     copyButton.classList.add('copied')
-                    
+
                     setTimeout(() => {
                       copyText.setAttribute('style', 'display: inline;')
                       copiedText.setAttribute('style', 'display: none;')
@@ -112,7 +113,7 @@ export const ArticleDetailPage = () => {
                 }
               }
             })
-            
+
             // Wrap the pre element and add copy button
             pre.parentNode?.insertBefore(wrapper, pre)
             wrapper.appendChild(pre)
@@ -132,7 +133,7 @@ export const ArticleDetailPage = () => {
         const src = div.getAttribute('src')
         const width = div.getAttribute('width') || '600'
         const height = div.getAttribute('height') || '400'
-        
+
         if (src && div instanceof HTMLElement) {
           const iframe = document.createElement('iframe')
           iframe.src = src
@@ -143,7 +144,7 @@ export const ArticleDetailPage = () => {
           iframe.setAttribute('frameborder', '0')
           iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture')
           iframe.setAttribute('allowfullscreen', 'true')
-          
+
           div.parentNode?.replaceChild(iframe, div)
         }
       })
@@ -158,8 +159,8 @@ export const ArticleDetailPage = () => {
           <div className="skeleton skeleton--line skeleton--line-lg" style={{ height: '2rem', flex: 1, maxWidth: '60%', margin: '0 auto' }} />
         </div>
 
-        <div className="article-detail__cover">
-          <div className="skeleton skeleton--image" style={{ width: '100%', height: '400px', borderRadius: '20px' }} />
+        <div className="article-detail__hero">
+          <div className="skeleton skeleton--image" style={{ width: '100%', height: '100%', borderRadius: 0 }} />
         </div>
 
         <article className="article-detail__content">
@@ -176,9 +177,9 @@ export const ArticleDetailPage = () => {
             <div className="skeleton skeleton--line" style={{ width: '85%', marginBottom: '1rem' }} />
             <div className="skeleton skeleton--line" style={{ width: '92%', marginBottom: '1rem' }} />
             <div className="skeleton skeleton--line" style={{ width: '40%', marginBottom: '2rem' }} />
-            
+
             <div className="skeleton skeleton--image" style={{ width: '100%', height: '300px', marginBottom: '2rem' }} />
-            
+
             <div className="skeleton skeleton--line" style={{ width: '100%', marginBottom: '1rem' }} />
             <div className="skeleton skeleton--line" style={{ width: '95%', marginBottom: '1rem' }} />
             <div className="skeleton skeleton--line" style={{ width: '90%', marginBottom: '1rem' }} />
@@ -194,7 +195,7 @@ export const ArticleDetailPage = () => {
         <div className="status status--error">
           <span>{t('failed_to_load')}</span>
           {error ? <span className="status__message">{error}</span> : null}
-          <Link to="/public/articles" className="button button--primary">
+          <Link to="/articles" className="button button--primary">
             {t('articles.back_to_list')}
           </Link>
         </div>
@@ -205,17 +206,38 @@ export const ArticleDetailPage = () => {
   return (
     <section className="page article-detail">
       <div className="article-detail__header">
-        <Link to="/public/articles" className="article-detail__back-link">
+        <Link to="/articles" className="article-detail__back-link">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M19 12H5M12 19l-7-7 7-7"/>
+            <path d="M19 12H5M12 19l-7-7 7-7" />
           </svg>
         </Link>
         <h1 className="article-detail__title">{article.title}</h1>
+        {article.coverImageUrl ? (
+          <button
+            className="article-detail__cover-toggle"
+            onClick={() => setCoverVisible((v) => !v)}
+            aria-label={coverVisible ? t('articles.hide_cover') : t('articles.show_cover')}
+            title={coverVisible ? t('articles.hide_cover') : t('articles.show_cover')}
+          >
+            {coverVisible ? (
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="2" />
+                <path d="M3 9h18" />
+                <path d="M9 21V9" />
+              </svg>
+            ) : (
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="2" />
+                <line x1="9" y1="3" x2="9" y2="21" strokeDasharray="3 3" />
+              </svg>
+            )}
+          </button>
+        ) : null}
       </div>
 
-      {article.coverImageUrl ? (
-        <div className="article-detail__cover">
-          <img src={article.coverImageUrl} alt={article.title} />
+      {article.coverImageUrl && coverVisible ? (
+        <div className="article-detail__hero">
+          <img src={article.coverImageUrl} alt={article.title} className="article-detail__hero-img" />
         </div>
       ) : null}
 
@@ -233,22 +255,22 @@ export const ArticleDetailPage = () => {
           ) : null}
           {article.updatedAt ? (
             <time className="article-detail__date">
-             {t('articles.updateAt')}:  {new Date(article.updatedAt).toLocaleDateString()}
+              {t('articles.updateAt')}:  {new Date(article.updatedAt).toLocaleDateString()}
             </time>
           ) : null}
-          
+
         </div>
 
-        <div 
+        <div
           className="article-detail__body"
           dangerouslySetInnerHTML={{ __html: article.content }}
         />
 
         {article.originalUrl ? (
           <div className="article-detail__actions">
-            <a 
-              href={article.originalUrl} 
-              target="_blank" 
+            <a
+              href={article.originalUrl}
+              target="_blank"
               rel="noopener noreferrer"
               className="button button--primary"
             >

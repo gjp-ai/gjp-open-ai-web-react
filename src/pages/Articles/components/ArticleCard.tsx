@@ -8,7 +8,7 @@ interface ArticleCardProps {
 export const ArticleCard = ({ article }: ArticleCardProps) => {
   return (
     <article className="card article-card">
-      <Link to={`/public/articles/${article.id}`} className="article-card__link">
+      <Link to={`/articles/${article.id}`} className="article-card__link">
         {article.coverImageUrl ? (
           <div className="article-card__media">
             <img
@@ -24,7 +24,7 @@ export const ArticleCard = ({ article }: ArticleCardProps) => {
           {article.summary && (
             <p className="article-card__summary">{article.summary}</p>
           )}
-          
+
         </div>
       </Link>
     </article>
