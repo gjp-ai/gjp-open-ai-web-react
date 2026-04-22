@@ -170,6 +170,8 @@ export const ArticleDetailPage = () => {
             <div className="skeleton skeleton--pill" style={{ width: '100px' }} />
           </div>
 
+          <hr />
+
           <div className="article-detail__body">
             <div className="skeleton skeleton--line" style={{ width: '100%', marginBottom: '1rem' }} />
             <div className="skeleton skeleton--line" style={{ width: '90%', marginBottom: '1rem' }} />
@@ -260,6 +262,8 @@ export const ArticleDetailPage = () => {
           ) : null}
 
         </div>
+
+        <hr />
 
         <div
           className="article-detail__body"
