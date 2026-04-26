@@ -1,9 +1,10 @@
-import { type ChangeEvent, useEffect, useMemo, useState } from 'react'
+import { type ChangeEvent, useCallback, useMemo, useState } from 'react'
 import { getQuestions } from '../../shared/data/openApi'
 import type { Question } from '../../shared/data/types'
-import { useUIContext } from '../../shared/contexts/UIContext'
-import { useAppSettings } from '../../shared/contexts/AppSettingsContext'
+import { useUIContext } from '../../shared/contexts/useUIContext'
+import { useAppSettings } from '../../shared/contexts/useAppSettings'
 import { useT } from '../../shared/i18n'
+import { usePagedFetch } from '../../shared/hooks/usePagedFetch'
 import { Pagination } from '../../shared/ui/Pagination'
 import { QuestionCard } from './components/QuestionCard'
 import { Toolbar } from '../../shared/components/Toolbar/Toolbar'
@@ -39,57 +40,29 @@ type SortOrder = 'displayOrder' | 'alpha' | 'recent'
 export const QuestionsPage = () => {
   const { language, searchQuery, setSearchQuery } = useUIContext()
   const { getTags } = useAppSettings()
-  const [items, setItems] = useState<Question[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-  const [currentPage, setCurrentPage] = useState(1)
   const [selectedTag, setSelectedTag] = useState<string | null>(null)
   const [sortOrder, setSortOrder] = useState<SortOrder>('displayOrder')
-  const [pageSize, setPageSize] = useState(500)
-  const [totalElements, setTotalElements] = useState(0)
-  const [totalPages, setTotalPages] = useState(1)
   const sectionTags = getTags('question_tags')
   const t = useT()
-  const failedLabel = t('failed_to_load')
 
-  useEffect(() => {
-    const controller = new AbortController()
-    const fetchData = async () => {
-      setLoading(true)
-      setError(null)
+  const fetcher = useCallback(
+    (page: number, size: number, lang: string, signal: AbortSignal) =>
+      getQuestions(page, size, undefined, undefined, lang, signal),
+    [],
+  )
 
-      try {
-        const response = await getQuestions(currentPage - 1, pageSize, undefined, undefined, language, controller.signal)
-        setItems(response.data.content)
-        setTotalElements(response.data.totalElements)
-        setTotalPages(response.data.totalPages)
-      } catch (err) {
-        if (err instanceof Error && err.name === 'AbortError') {
-          return
-        }
-        const message = err instanceof Error ? err.message : failedLabel
-        setError(message)
-      } finally {
-        if (!controller.signal.aborted) {
-          setLoading(false)
-        }
-      }
-    }
-
-    // Debounce the request to avoid double-fetching in React StrictMode
-    const timeoutId = setTimeout(() => {
-      void fetchData()
-    }, 10)
-
-    return () => {
-      clearTimeout(timeoutId)
-      controller.abort()
-    }
-  }, [failedLabel, pageSize, currentPage, language])
-
-  useEffect(() => {
-    setCurrentPage(1)
-  }, [language])
+  const {
+    items,
+    loading,
+    error,
+    currentPage,
+    setCurrentPage,
+    totalElements,
+    totalPages,
+    pageSize,
+    handlePageSizeChange,
+    skeletonItems,
+  } = usePagedFetch(fetcher, { initialPageSize: 500, skeletonCount: 5 })
 
   const displayItems = useMemo(
     () => {
@@ -141,13 +114,6 @@ export const QuestionsPage = () => {
     setCurrentPage(page)
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
-
-  const handlePageSizeChange = (newPageSize: number) => {
-    setPageSize(newPageSize)
-    setCurrentPage(1)
-  }
-
-  const skeletonItems = Array.from({ length: 5 }, (_, index) => index)
 
   return (
     <div className="page-container">

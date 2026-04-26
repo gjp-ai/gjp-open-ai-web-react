@@ -4,8 +4,8 @@ import { Footer } from '../../shared/components/Footer'
 import { LanguageToggle } from '../../shared/ui/LanguageToggle'
 import { ThemeToggle } from '../../shared/ui/ThemeToggle'
 import { ThemeColorPicker } from '../../shared/ui/ThemeColorPicker'
-import { useAppSettings } from '../../shared/contexts/AppSettingsContext'
-import { useUIContext } from '../../shared/contexts/UIContext'
+import { useAppSettings } from '../../shared/contexts/useAppSettings'
+import { useUIContext } from '../../shared/contexts/useUIContext'
 
 const sectionLinks = [
   { path: '/websites', label: { EN: 'Websites', ZH: '网站' }, tagsKey: 'website_tags' },

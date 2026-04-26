@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { useAppSettings } from '../contexts/AppSettingsContext'
+import { useAppSettings } from '../contexts/useAppSettings'
 import { useT } from '../i18n'
 
 export const Footer = () => {

@@ -47,7 +47,6 @@ export const QuestionCard = ({ question }: QuestionCardProps) => {
         } catch (e) {
           // swallow highlighting errors to avoid breaking the page
           // (e.g., unknown language or malformed nodes)
-          // eslint-disable-next-line no-console
           console.error('highlight.js error', e)
         }
 

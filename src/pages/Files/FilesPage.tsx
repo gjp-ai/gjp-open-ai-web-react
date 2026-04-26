@@ -1,9 +1,10 @@
-import { type ChangeEvent, useEffect, useMemo, useState } from 'react'
+import { type ChangeEvent, useCallback, useMemo, useState } from 'react'
 import { getFiles } from '../../shared/data/openApi'
 import type { FileItem } from '../../shared/data/types'
-import { useUIContext } from '../../shared/contexts/UIContext'
+import { useUIContext } from '../../shared/contexts/useUIContext'
 import { useT } from '../../shared/i18n'
-import { useAppSettings } from '../../shared/contexts/AppSettingsContext'
+import { useAppSettings } from '../../shared/contexts/useAppSettings'
+import { usePagedFetch } from '../../shared/hooks/usePagedFetch'
 import { FileCard } from './FileCard'
 import { Pagination } from '../../shared/ui/Pagination'
 import { Toolbar } from '../../shared/components/Toolbar/Toolbar'
@@ -12,25 +13,15 @@ import './files.css'
 const normalizeText = (value: string) => value.toLowerCase()
 
 const matchesSearch = (item: FileItem, query: string) => {
-  if (!query) {
-    return true
-  }
-
+  if (!query) return true
   const text = normalizeText(query)
   const fields = [item.name, item.description ?? '', item.tags ?? '']
   return fields.some((field) => normalizeText(field).includes(text))
 }
 
 const hasTag = (item: FileItem, tag: string | null) => {
-  if (!tag) {
-    return true
-  }
-
-  const tagList = (item.tags ?? '')
-    .split(',')
-    .map((t) => t.trim().toLowerCase())
-    .filter(Boolean)
-
+  if (!tag) return true
+  const tagList = (item.tags ?? '').split(',').map((t) => t.trim().toLowerCase()).filter(Boolean)
   return tagList.includes(tag.toLowerCase())
 }
 
@@ -39,137 +30,44 @@ type SortOrder = 'displayOrder' | 'alpha' | 'recent'
 export const FilesPage = () => {
   const { language, searchQuery, setSearchQuery } = useUIContext()
   const { getTags } = useAppSettings()
-  const [items, setItems] = useState<FileItem[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-  const [currentPage, setCurrentPage] = useState(1)
   const [selectedTag, setSelectedTag] = useState<string | null>(null)
   const [sortOrder, setSortOrder] = useState<SortOrder>('displayOrder')
-  const [pageSize, setPageSize] = useState(50)
-  const [totalElements, setTotalElements] = useState(0)
-  const [totalPages, setTotalPages] = useState(0)
   const sectionTags = getTags('file_tags')
   const t = useT()
-  const failedLabel = t('failed_to_load')
 
-  useEffect(() => {
-    const controller = new AbortController()
-    const fetchData = async () => {
-      setLoading(true)
-      setError(null)
-
-      try {
-        const response = await getFiles(currentPage - 1, pageSize, language, controller.signal)
-        setItems(response.data.content)
-        setTotalElements(response.data.totalElements)
-        setTotalPages(response.data.totalPages)
-      } catch (err) {
-        if (err instanceof Error && err.name === 'AbortError') {
-          return
-        }
-        const message = err instanceof Error ? err.message : failedLabel
-        setError(message)
-      } finally {
-        if (!controller.signal.aborted) {
-          setLoading(false)
-        }
-      }
-    }
-
-    // Debounce the request to avoid double-fetching in React StrictMode
-    const timeoutId = setTimeout(() => {
-      void fetchData()
-    }, 10)
-
-    return () => {
-      clearTimeout(timeoutId)
-      controller.abort()
-    }
-  }, [failedLabel, currentPage, pageSize, language])
-
-  useEffect(() => {
-    setCurrentPage(1)
-  }, [language])
-
-  const displayItems = useMemo(
-    () => {
-      const trimmedQuery = searchQuery.trim()
-      let filtered = items.filter((item) => item.lang === language)
-
-      if (trimmedQuery) {
-        filtered = filtered.filter((item) => matchesSearch(item, trimmedQuery))
-      }
-
-      if (selectedTag) {
-        filtered = filtered.filter((item) => hasTag(item, selectedTag))
-      }
-
-      // Sort items
-      switch (sortOrder) {
-        case 'displayOrder':
-          filtered.sort((a, b) => (a.displayOrder ?? 0) - (b.displayOrder ?? 0))
-          break
-        case 'alpha':
-          filtered.sort((a, b) => a.name.localeCompare(b.name, language === 'ZH' ? 'zh-CN' : 'en', { sensitivity: 'base' }))
-          break
-        case 'recent':
-          filtered.sort((a, b) => {
-            const aTime = new Date(a.updatedAt ?? '').getTime()
-            const bTime = new Date(b.updatedAt ?? '').getTime()
-            return Number.isNaN(bTime - aTime) ? 0 : bTime - aTime
-          })
-          break
-        default:
-          filtered.sort((a, b) => (a.displayOrder ?? 0) - (b.displayOrder ?? 0))
-          break
-      }
-
-      return filtered
-    },
-    [items, language, searchQuery, selectedTag, sortOrder],
+  const fetcher = useCallback(
+    (page: number, size: number, lang: string, signal: AbortSignal) => getFiles(page, size, lang, signal),
+    [],
   )
 
-  useEffect(() => {
-    if (currentPage > totalPages && totalPages > 0) {
-      setCurrentPage(totalPages)
+  const { items, loading, error, currentPage, setCurrentPage, totalElements, totalPages, pageSize, handlePageSizeChange, skeletonItems } =
+    usePagedFetch(fetcher, { initialPageSize: 50, skeletonCount: 28 })
+
+  const displayItems = useMemo(() => {
+    const trimmedQuery = searchQuery.trim()
+    let filtered = items.filter((item) => item.lang === language)
+    if (trimmedQuery) filtered = filtered.filter((item) => matchesSearch(item, trimmedQuery))
+    if (selectedTag) filtered = filtered.filter((item) => hasTag(item, selectedTag))
+
+    switch (sortOrder) {
+      case 'displayOrder': filtered.sort((a, b) => (a.displayOrder ?? 0) - (b.displayOrder ?? 0)); break
+      case 'alpha': filtered.sort((a, b) => a.name.localeCompare(b.name, language === 'ZH' ? 'zh-CN' : 'en', { sensitivity: 'base' })); break
+      case 'recent': filtered.sort((a, b) => {
+        const aTime = new Date(a.updatedAt ?? '').getTime(); const bTime = new Date(b.updatedAt ?? '').getTime()
+        return Number.isNaN(bTime - aTime) ? 0 : bTime - aTime
+      }); break
+      default: filtered.sort((a, b) => (a.displayOrder ?? 0) - (b.displayOrder ?? 0)); break
     }
-  }, [currentPage, totalPages])
+    return filtered
+  }, [items, language, searchQuery, selectedTag, sortOrder])
 
-  const handleSearchChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(event.target.value)
-    setCurrentPage(1)
-  }
-
-  const handleClearSearch = () => {
-    setSearchQuery('')
-    setCurrentPage(1)
-  }
-
-  const handleSelectTag = (tag: string | null) => {
-    setSelectedTag(tag)
-    setCurrentPage(1)
-  }
-
-  const handlePageSizeChange = (newPageSize: number) => {
-    setPageSize(newPageSize)
-    setCurrentPage(1)
-  }
-
-  const skeletonItems = Array.from({ length: 28 }, (_, index) => index)
+  const handleSearchChange = (event: ChangeEvent<HTMLInputElement>) => { setSearchQuery(event.target.value); setCurrentPage(1) }
+  const handleClearSearch = () => { setSearchQuery(''); setCurrentPage(1) }
+  const handleSelectTag = (tag: string | null) => { setSelectedTag(tag); setCurrentPage(1) }
 
   return (
     <section className="page">
-      <Toolbar
-        sectionTags={sectionTags}
-        selectedTag={selectedTag}
-        onSelectTag={handleSelectTag}
-        searchQuery={searchQuery}
-        onSearchChange={handleSearchChange}
-        onClearSearch={handleClearSearch}
-        sortOrder={sortOrder}
-        setSortOrder={setSortOrder}
-        namespace="files"
-      />
+      <Toolbar sectionTags={sectionTags} selectedTag={selectedTag} onSelectTag={handleSelectTag} searchQuery={searchQuery} onSearchChange={handleSearchChange} onClearSearch={handleClearSearch} sortOrder={sortOrder} setSortOrder={setSortOrder} namespace="files" />
 
       {loading ? (
         <div className="grid grid--files">
@@ -196,19 +94,8 @@ export const FilesPage = () => {
               <FileCard key={item.id} item={item} />
             ))}
           </div>
-          {displayItems.length === 0 ? (
-            <div className="status status--empty">
-              {t('files.empty')}
-            </div>
-          ) : null}
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={setCurrentPage}
-            totalElements={totalElements}
-            pageSize={pageSize}
-            onPageSizeChange={handlePageSizeChange}
-          />
+          {displayItems.length === 0 ? <div className="status status--empty">{t('files.empty')}</div> : null}
+          <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} totalElements={totalElements} pageSize={pageSize} onPageSizeChange={handlePageSizeChange} />
         </>
       ) : null}
     </section>

@@ -1,7 +1,5 @@
 import {
-  createContext,
   useCallback,
-  useContext,
   useEffect,
   useMemo,
   useState,
@@ -9,20 +7,10 @@ import {
 } from 'react'
 import { getAppSettings } from '../data/openApi'
 import type { AppSetting } from '../data/types'
-import { useUIContext, type LanguageCode } from './UIContext'
+import type { LanguageCode } from './UIContext'
+import { useUIContext } from './useUIContext'
 import { useT } from '../i18n'
-
-interface AppSettingsContextValue {
-  settings: AppSetting[]
-  loading: boolean
-  error: string | null
-  getValue: (name: string, lang?: LanguageCode) => string | undefined
-  getValues: (name: string) => Partial<Record<LanguageCode, string>>
-  getTags: (name: string, lang?: LanguageCode) => string[]
-  reload: () => Promise<void>
-}
-
-const AppSettingsContext = createContext<AppSettingsContextValue | undefined>(undefined)
+import { AppSettingsContext, type AppSettingsContextValue } from './appSettingsContextCore'
 
 export const AppSettingsProvider = ({ children }: { children: ReactNode }) => {
   const { language } = useUIContext()
@@ -45,10 +33,8 @@ export const AppSettingsProvider = ({ children }: { children: ReactNode }) => {
           const parsed: AppSetting[] = JSON.parse(cached)
           setSettings(parsed)
         }
-      } catch (err) {
-        // JSON parse error or localStorage access error: ignore and continue to fetch
-        // eslint-disable-next-line no-console
-        console.warn('Failed to read cached app settings from localStorage', err)
+      } catch {
+        // JSON parse error or localStorage access error: ignore and continue to fetch.
       }
 
       // Call the API only once per page load (use sessionStorage to track this)
@@ -58,10 +44,8 @@ export const AppSettingsProvider = ({ children }: { children: ReactNode }) => {
 
         try {
           localStorage.setItem(cacheKey, JSON.stringify(response.data))
-        } catch (err) {
-          // Ignore storage write errors
-          // eslint-disable-next-line no-console
-          console.warn('Failed to write app settings to localStorage', err)
+        } catch {
+          // Ignore storage write errors.
         }
 
         try {
@@ -76,7 +60,7 @@ export const AppSettingsProvider = ({ children }: { children: ReactNode }) => {
     } finally {
       setLoading(false)
     }
-  }, [])
+  }, [t])
 
   useEffect(() => {
     void loadSettings()
@@ -152,10 +136,8 @@ export const AppSettingsProvider = ({ children }: { children: ReactNode }) => {
           setSettings(response.data)
           try {
             localStorage.setItem('gjpapp_settings', JSON.stringify(response.data))
-          } catch (err) {
+          } catch {
             // ignore
-            // eslint-disable-next-line no-console
-            console.warn('Failed to write app settings to localStorage', err)
           }
           try {
             sessionStorage.setItem('gjpapp_settings_fetched', '1')
@@ -170,18 +152,8 @@ export const AppSettingsProvider = ({ children }: { children: ReactNode }) => {
         }
       },
     }),
-    [settings, loading, error, getValue, getValues, getTags, loadSettings],
+    [settings, loading, error, getValue, getValues, getTags, t],
   )
 
   return <AppSettingsContext.Provider value={value}>{children}</AppSettingsContext.Provider>
-}
-
-export const useAppSettings = () => {
-  const context = useContext(AppSettingsContext)
-
-  if (!context) {
-    throw new Error('useAppSettings must be used within an AppSettingsProvider')
-  }
-
-  return context
 }

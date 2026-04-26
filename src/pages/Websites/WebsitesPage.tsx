@@ -1,9 +1,10 @@
-import { type ChangeEvent, useEffect, useMemo, useState } from 'react'
+import { type ChangeEvent, useCallback, useMemo, useState } from 'react'
 import { getWebsites } from '../../shared/data/openApi'
 import type { Website } from '../../shared/data/types'
-import { useUIContext } from '../../shared/contexts/UIContext'
-import { useAppSettings } from '../../shared/contexts/AppSettingsContext'
+import { useUIContext } from '../../shared/contexts/useUIContext'
+import { useAppSettings } from '../../shared/contexts/useAppSettings'
 import { useT } from '../../shared/i18n'
+import { usePagedFetch } from '../../shared/hooks/usePagedFetch'
 import { Pagination } from '../../shared/ui/Pagination'
 import { WebsiteCard } from './components/WebsiteCard'
 import { Toolbar } from '../../shared/components/Toolbar/Toolbar'
@@ -39,57 +40,29 @@ type SortOrder = 'displayOrder' | 'alpha' | 'recent'
 export const WebsitesPage = () => {
   const { language, searchQuery, setSearchQuery } = useUIContext()
   const { getTags } = useAppSettings()
-  const [items, setItems] = useState<Website[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-  const [currentPage, setCurrentPage] = useState(1)
   const [selectedTag, setSelectedTag] = useState<string | null>(null)
   const [sortOrder, setSortOrder] = useState<SortOrder>('displayOrder')
-  const [pageSize, setPageSize] = useState(500)
-  const [totalElements, setTotalElements] = useState(0)
-  const [totalPages, setTotalPages] = useState(1)
   const sectionTags = getTags('website_tags')
   const t = useT()
-  const failedLabel = t('failed_to_load')
 
-  useEffect(() => {
-    const controller = new AbortController()
-    const fetchData = async () => {
-      setLoading(true)
-      setError(null)
+  const fetcher = useCallback(
+    (page: number, size: number, lang: string, signal: AbortSignal) =>
+      getWebsites(page, size, undefined, undefined, lang, signal),
+    [],
+  )
 
-      try {
-        const response = await getWebsites(currentPage - 1, pageSize, undefined, undefined, language, controller.signal)
-        setItems(response.data.content)
-        setTotalElements(response.data.totalElements)
-        setTotalPages(response.data.totalPages)
-      } catch (err) {
-        if (err instanceof Error && err.name === 'AbortError') {
-          return
-        }
-        const message = err instanceof Error ? err.message : failedLabel
-        setError(message)
-      } finally {
-        if (!controller.signal.aborted) {
-          setLoading(false)
-        }
-      }
-    }
-
-    // Debounce the request to avoid double-fetching in React StrictMode
-    const timeoutId = setTimeout(() => {
-      void fetchData()
-    }, 10)
-
-    return () => {
-      clearTimeout(timeoutId)
-      controller.abort()
-    }
-  }, [failedLabel, pageSize, currentPage, language])
-
-  useEffect(() => {
-    setCurrentPage(1)
-  }, [language])
+  const {
+    items,
+    loading,
+    error,
+    currentPage,
+    setCurrentPage,
+    totalElements,
+    totalPages,
+    pageSize,
+    handlePageSizeChange,
+    skeletonItems,
+  } = usePagedFetch(fetcher, { initialPageSize: 500, skeletonCount: 30 })
 
   const displayItems = useMemo(
     () => {
@@ -129,12 +102,6 @@ export const WebsitesPage = () => {
     [items, language, searchQuery, selectedTag, sortOrder],
   )
 
-  useEffect(() => {
-    if (currentPage > totalPages && totalPages > 0) {
-      setCurrentPage(totalPages)
-    }
-  }, [currentPage, totalPages])
-
   const handleSearchChange = (event: ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(event.target.value)
     setCurrentPage(1)
@@ -149,13 +116,6 @@ export const WebsitesPage = () => {
     setSelectedTag(tag)
     setCurrentPage(1)
   }
-
-  const handlePageSizeChange = (newPageSize: number) => {
-    setPageSize(newPageSize)
-    setCurrentPage(1)
-  }
-
-  const skeletonItems = Array.from({ length: 30 }, (_, index) => index)
 
   return (
     <section className="page">

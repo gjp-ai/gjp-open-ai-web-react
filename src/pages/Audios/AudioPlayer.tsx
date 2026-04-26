@@ -88,7 +88,7 @@ export const AudioPlayer = ({
     return `${minutes}:${seconds.toString().padStart(2, '0')}`
   }
 
-  const activeCaptionsUrl = (item as any)?.captionsUrl as string | undefined
+  const activeCaptionsUrl = item.captionsUrl ?? undefined
 
   return (
     <div className="audio-card__player-wrapper">

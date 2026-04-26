@@ -1,5 +1,15 @@
 # React + TypeScript + Vite
 
+## Project Quality Harness
+
+Use the local engineering harness before committing changes:
+
+```sh
+npm run check
+```
+
+See [ENGINEERING.md](./ENGINEERING.md) for the code generation, review, and maintainability checklist.
+
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
 Currently, two official plugins are available:

@@ -1,23 +1,7 @@
-import { createContext, useContext, useEffect, useMemo, useState, useCallback, type ReactNode } from 'react'
+import { useEffect, useMemo, useState, useCallback, type ReactNode } from 'react'
+import { UIContext, type LanguageCode, type ThemeColor, type ThemeMode, type UIContextValue } from './uiContextCore'
 
-export type ThemeMode = 'light' | 'dark'
-export type LanguageCode = 'EN' | 'ZH'
-export type ThemeColor = 'blue' | 'purple' | 'green' | 'orange' | 'red'
-
-interface UIContextValue {
-  theme: ThemeMode
-  setTheme: (mode: ThemeMode) => void
-  toggleTheme: () => void
-  language: LanguageCode
-  setLanguage: (lang: LanguageCode) => void
-  toggleLanguage: () => void
-  themeColor: ThemeColor
-  setThemeColor: (color: ThemeColor) => void
-  searchQuery: string
-  setSearchQuery: (query: string) => void
-}
-
-const UIContext = createContext<UIContextValue | undefined>(undefined)
+export type { LanguageCode, ThemeColor, ThemeMode } from './uiContextCore'
 
 const THEME_STORAGE_KEY = 'gjp.theme'
 const LANGUAGE_STORAGE_KEY = 'gjp.language'
@@ -136,14 +120,4 @@ export const UIProvider = ({ children }: { children: ReactNode }) => {
   )
 
   return <UIContext.Provider value={value}>{children}</UIContext.Provider>
-}
-
-export const useUIContext = () => {
-  const context = useContext(UIContext)
-
-  if (!context) {
-    throw new Error('useUIContext must be used within a UIProvider')
-  }
-
-  return context
 }

@@ -1,5 +1,5 @@
 import { useCallback } from 'react'
-import { useUIContext } from './contexts/UIContext'
+import { useUIContext } from './contexts/useUIContext'
 import websitesTranslations from '../pages/Websites/i18n'
 import questionsTranslations from '../pages/Questions/i18n'
 import articlesTranslations from '../pages/Articles/i18n'

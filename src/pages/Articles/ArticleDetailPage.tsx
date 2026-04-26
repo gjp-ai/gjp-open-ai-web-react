@@ -108,7 +108,6 @@ export const ArticleDetailPage = () => {
                     }, 2000)
                   }
                 } catch (err) {
-                  // eslint-disable-next-line no-console
                   console.error('Failed to copy code:', err)
                 }
               }
@@ -123,7 +122,6 @@ export const ArticleDetailPage = () => {
       } catch (e) {
         // swallow highlighting errors to avoid breaking the page
         // (e.g., unknown language or malformed nodes)
-        // eslint-disable-next-line no-console
         console.error('highlight.js error', e)
       }
 

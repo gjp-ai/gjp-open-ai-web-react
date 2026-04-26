@@ -44,8 +44,7 @@ export const ImagePreview = ({ image, allImages, onClose, onNext, onPrevious }: 
   }
 
   return (
-    // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
-    <div className="image-preview" onClick={handleBackdropClick}>
+    <div className="image-preview" onClick={handleBackdropClick} role="presentation">
       <div className="image-preview__container">
         <button
           className="image-preview__close"

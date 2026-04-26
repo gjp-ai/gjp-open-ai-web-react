@@ -1,5 +1,5 @@
 import type { ChangeEvent } from 'react'
-import { useUIContext } from '../contexts/UIContext'
+import { useUIContext } from '../contexts/useUIContext'
 import { useT } from '../i18n'
 
 export const SearchBar = () => {

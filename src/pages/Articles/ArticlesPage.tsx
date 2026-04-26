@@ -1,9 +1,10 @@
-import { type ChangeEvent, useEffect, useMemo, useState } from 'react'
+import { type ChangeEvent, useCallback, useMemo, useState } from 'react'
 import { getArticles } from '../../shared/data/openApi'
 import type { ArticleSummary } from '../../shared/data/types'
-import { useUIContext } from '../../shared/contexts/UIContext'
+import { useUIContext } from '../../shared/contexts/useUIContext'
 import { useT } from '../../shared/i18n'
-import { useAppSettings } from '../../shared/contexts/AppSettingsContext'
+import { useAppSettings } from '../../shared/contexts/useAppSettings'
+import { usePagedFetch } from '../../shared/hooks/usePagedFetch'
 import { ArticleCard } from './components/ArticleCard'
 import { Toolbar } from '../../shared/components/Toolbar/Toolbar'
 import { Pagination } from '../../shared/ui/Pagination'
@@ -39,58 +40,28 @@ type SortOrder = 'displayOrder' | 'alpha' | 'recent'
 export const ArticlesPage = () => {
   const { language, searchQuery, setSearchQuery } = useUIContext()
   const { getTags } = useAppSettings()
-  const [items, setItems] = useState<ArticleSummary[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-  const [currentPage, setCurrentPage] = useState(1)
   const [selectedTag, setSelectedTag] = useState<string | null>(null)
   const [sortOrder, setSortOrder] = useState<SortOrder>('displayOrder')
-  const [pageSize, setPageSize] = useState(50)
-  const [totalElements, setTotalElements] = useState(0)
-  const [totalPages, setTotalPages] = useState(1)
   const sectionTags = getTags('article_tags')
   const t = useT()
-  const failedLabel = t('failed_to_load')
 
-  useEffect(() => {
-    const controller = new AbortController()
-    const signal = controller.signal
+  const fetcher = useCallback(
+    (page: number, size: number, lang: string, signal: AbortSignal) => getArticles(page, size, lang, signal),
+    [],
+  )
 
-    const fetchData = async () => {
-      setLoading(true)
-      setError(null)
-
-      try {
-        const response = await getArticles(currentPage - 1, pageSize, language, signal)
-        setItems(response.data.content)
-        setTotalElements(response.data.totalElements)
-        setTotalPages(response.data.totalPages)
-      } catch (err) {
-        if (err instanceof Error && err.name === 'AbortError') {
-          return
-        }
-        const message = err instanceof Error ? err.message : failedLabel
-        setError(message)
-      } finally {
-        if (!signal.aborted) {
-          setLoading(false)
-        }
-      }
-    }
-
-    const timeoutId = setTimeout(() => {
-      void fetchData()
-    }, 10)
-
-    return () => {
-      clearTimeout(timeoutId)
-      controller.abort()
-    }
-  }, [failedLabel, pageSize, currentPage, language])
-
-  useEffect(() => {
-    setCurrentPage(1)
-  }, [language])
+  const {
+    items,
+    loading,
+    error,
+    currentPage,
+    setCurrentPage,
+    totalElements,
+    totalPages,
+    pageSize,
+    handlePageSizeChange,
+    skeletonItems,
+  } = usePagedFetch(fetcher, { initialPageSize: 50, skeletonCount: 8 })
 
   const displayItems = useMemo(
     () => {
@@ -130,12 +101,6 @@ export const ArticlesPage = () => {
     [items, language, searchQuery, selectedTag, sortOrder],
   )
 
-  useEffect(() => {
-    if (currentPage > totalPages && totalPages > 0) {
-      setCurrentPage(totalPages)
-    }
-  }, [currentPage, totalPages])
-
   const handleSearchChange = (event: ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(event.target.value)
     setCurrentPage(1)
@@ -150,13 +115,6 @@ export const ArticlesPage = () => {
     setSelectedTag(tag)
     setCurrentPage(1)
   }
-
-  const handlePageSizeChange = (newPageSize: number) => {
-    setPageSize(newPageSize)
-    setCurrentPage(1)
-  }
-
-  const skeletonItems = Array.from({ length: 8 }, (_, index) => index)
 
   return (
     <section className="page">

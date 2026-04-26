@@ -14,16 +14,16 @@ export default defineConfig({
         // target: 'http://localhost:8083',
         changeOrigin: true,
         secure: false,
-        configure: (proxy, _options) => {
-          proxy.on('error', (err, _req, _res) => {
-            console.log('proxy error', err);
-          });
-          proxy.on('proxyReq', (proxyReq, _req, _res) => {
-            console.log('Proxying request to:', proxyReq.path);
-          });
-          proxy.on('proxyRes', (proxyRes, _req, _res) => {
-            console.log('Proxy response status:', proxyRes.statusCode);
-          });
+        configure: (proxy) => {
+          proxy.on('error', (err) => {
+            console.log('proxy error', err)
+          })
+          proxy.on('proxyReq', (proxyReq) => {
+            console.log('Proxying request to:', proxyReq.path)
+          })
+          proxy.on('proxyRes', (proxyRes) => {
+            console.log('Proxy response status:', proxyRes.statusCode)
+          })
         },
       },
     },
