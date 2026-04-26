@@ -47,6 +47,10 @@
   border-color: var(--color-primary);
 }
 
+.theme-dark .article-card:hover {
+  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.32);
+}
+
 .article-card__link {
   display: flex;
   flex-direction: column;
@@ -93,6 +97,10 @@
   gap: 0.4rem;
   padding: 0.75rem 0.9rem 0.6rem;
   background-color: white;
+}
+
+.theme-dark .article-card__body {
+  background-color: var(--color-bg-secondary);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -331,6 +339,11 @@
   overflow-x: auto;
   line-height: 1.6;
   position: relative;
+}
+
+.theme-dark .article-detail__body pre {
+  background: #0a1020;
+  border-color: var(--color-border);
 }
 
 .article-detail__body pre code {

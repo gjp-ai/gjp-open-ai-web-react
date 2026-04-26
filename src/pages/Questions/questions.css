@@ -13,7 +13,7 @@
   gap: 0.5rem;
   padding: 1rem;
   overflow: visible;
-  border-color: #e5e8ec;
+  border-color: var(--color-border);
   cursor: pointer;
   transition: all 0.2s ease;
 }
@@ -21,6 +21,10 @@
 .question-card:hover {
   border-color: var(--color-primary);
   background-color: var(--color-bg-secondary);
+}
+
+.theme-dark .question-card:hover {
+  background-color: var(--color-surface-alt);
 }
 
 .question-card--skeleton {

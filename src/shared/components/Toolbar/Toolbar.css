@@ -23,8 +23,8 @@
 }
 
 .toolbar__search:focus-within {
-  border-color: rgba(37, 99, 235, 0.65);
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-focus-ring);
 }
 
 .toolbar__search-icon {
@@ -71,7 +71,7 @@
 .toolbar__clear:hover,
 .toolbar__clear:focus {
   color: var(--color-primary);
-  background: rgba(37, 99, 235, 0.08);
+  background: var(--color-primary-soft);
   outline: none;
 }
 
@@ -137,8 +137,8 @@
 .toolbar-sort-button:hover,
 .toolbar-sort-button:focus {
   color: var(--color-primary);
-  border-color: rgba(37, 99, 235, 0.45);
-  background: rgba(37, 99, 235, 0.04);
+  border-color: var(--color-primary);
+  background: var(--color-primary-soft);
   outline: none;
 }
 
@@ -175,14 +175,14 @@
 }
 
 .sort-menu__item.active {
-  background: rgba(37, 99, 235, 0.1);
+  background: var(--color-primary-soft);
   color: var(--color-primary);
   font-weight: 600;
 }
 
 .sort-menu__item:hover,
 .sort-menu__item:focus {
-  background: rgba(37, 99, 235, 0.06);
+  background: var(--color-primary-soft);
   outline: none;
 }
 
@@ -203,8 +203,8 @@
 .chip:hover,
 .chip:focus {
   color: var(--color-primary);
-  border-color: rgba(37, 99, 235, 0.45);
-  background: rgba(37, 99, 235, 0.04);
+  border-color: var(--color-primary);
+  background: var(--color-primary-soft);
   outline: none;
 }
 
@@ -212,13 +212,44 @@
   background: var(--color-primary);
   border-color: var(--color-primary);
   color: #ffffff;
-  box-shadow: 0 6px 14px rgba(37, 99, 235, 0.18);
+  box-shadow: 0 6px 14px var(--color-primary-muted);
 }
 
 .chip--active:hover,
 .chip--active:focus {
   color: #ffffff;
   background: var(--color-primary-hover);
+}
+
+.theme-dark .toolbar__search,
+.theme-dark .toolbar-sort-button,
+.theme-dark .chip {
+  background: rgba(20, 27, 43, 0.76);
+  border-color: rgba(148, 163, 184, 0.16);
+}
+
+.theme-dark .toolbar__search {
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+}
+
+.theme-dark .toolbar-sort-menu .sort-menu {
+  background: var(--color-surface-elevated);
+  border-color: var(--color-border-strong);
+  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.38);
+}
+
+.theme-dark .chip--active {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: #08111f;
+  box-shadow: 0 8px 18px rgba(125, 180, 255, 0.22);
+}
+
+.theme-dark .chip--active:hover,
+.theme-dark .chip--active:focus {
+  background: var(--color-primary-hover);
+  border-color: var(--color-primary-hover);
+  color: #08111f;
 }
 
 @media (max-width: 900px) {
