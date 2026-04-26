@@ -1,0 +1,8 @@
+<svg width="128" height="128" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Logo option 2</title>
+  <desc id="desc">Simple circular G monogram with small JP text.</desc>
+  <circle cx="64" cy="64" r="58" fill="var(--logo-bg, #ffffff)"/>
+  <circle cx="64" cy="64" r="56" stroke="var(--logo-ring, #dfe3eb)" stroke-width="4"/>
+  <text x="60" y="76" text-anchor="middle" fill="var(--logo-fg, #111827)" font-family="Avenir Next, Montserrat, Arial, sans-serif" font-size="58" font-weight="850" letter-spacing="-2">G</text>
+  <text x="85" y="75" text-anchor="middle" fill="var(--logo-fg, #111827)" font-family="Avenir Next, Montserrat, Arial, sans-serif" font-size="19" font-weight="850">JP</text>
+</svg>
