@@ -242,6 +242,24 @@ export const ArticleDetailPage = () => {
       ) : null}
 
       <article className="article-detail__content">
+        <div
+          className="article-detail__body"
+          dangerouslySetInnerHTML={{ __html: article.content }}
+        />
+
+        {article.originalUrl ? (
+          <div className="article-detail__actions">
+            <a
+              href={article.originalUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="button button--primary"
+            >
+              {t('articles.view_original')}
+            </a>
+          </div>
+        ) : null}
+        <hr />
         <div className="article-detail__meta">
           {article.tags ? (
             <span className="article-detail__tags">
@@ -260,26 +278,6 @@ export const ArticleDetailPage = () => {
           ) : null}
 
         </div>
-
-        <hr />
-
-        <div
-          className="article-detail__body"
-          dangerouslySetInnerHTML={{ __html: article.content }}
-        />
-
-        {article.originalUrl ? (
-          <div className="article-detail__actions">
-            <a
-              href={article.originalUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="button button--primary"
-            >
-              {t('articles.view_original')}
-            </a>
-          </div>
-        ) : null}
       </article>
     </section>
   )

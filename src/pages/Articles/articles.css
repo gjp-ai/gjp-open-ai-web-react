@@ -259,7 +259,7 @@
 
 .article-detail__content {
   background: var(--color-bg-secondary);
-  padding: 0;
+  padding: 1rem;
   border-radius: var(--radius-md);
 }
 
