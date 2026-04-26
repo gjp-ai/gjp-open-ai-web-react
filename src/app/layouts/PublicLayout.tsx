@@ -129,6 +129,10 @@ export const PublicLayout = () => {
 
         <NavLink to="/websites" className="site-logo">
           <img src={`${import.meta.env.BASE_URL}favicon.ico`} alt="Site logo" className="site-logo__img" />
+          <span className="site-logo__wordmark">
+            <span className="site-logo__brand">GJP</span>
+            <span className="site-logo__ai">AI</span>
+          </span>
         </NavLink>
 
         {/* Desktop navigation */}

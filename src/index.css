@@ -195,12 +195,41 @@ img {
   align-items: center;
   gap: 0.75rem;
   flex: 0 0 auto;
+  text-decoration: none;
 }
 
 .site-logo__img {
   height: 48px;
   width: auto;
   display: block;
+}
+
+.site-logo__wordmark {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.28rem;
+  color: var(--color-text);
+  font-size: 1.28rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.site-logo__brand {
+  color: var(--color-text);
+}
+
+.site-logo__ai {
+  background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+.theme-dark .site-logo__ai {
+  background: linear-gradient(135deg, #dbeafe, var(--color-accent));
+  background-clip: text;
+  -webkit-background-clip: text;
 }
 
 .site-logo__mark {
@@ -1140,6 +1169,16 @@ img {
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
+    gap: 0.55rem;
+  }
+
+  .site-logo__img {
+    height: 42px;
+  }
+
+  .site-logo__wordmark {
+    gap: 0.2rem;
+    font-size: 1rem;
   }
 
   .site-header__sections {
