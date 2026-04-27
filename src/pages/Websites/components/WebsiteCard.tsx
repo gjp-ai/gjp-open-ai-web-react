@@ -1,6 +1,5 @@
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 import type { Website } from '../../../shared/data/types'
-import { useT } from '../../../shared/i18n'
 
 interface WebsiteCardProps {
   website: Website
@@ -23,63 +22,35 @@ const DefaultLogoIcon = () => (
   </svg>
 )
 
-const getUniqueTags = (tags: string) => {
-  const unique: string[] = []
-  const seen = new Set<string>()
-
-  const parts = tags.split(',').map((tag) => tag.trim()).filter(Boolean)
-  for (const tag of parts) {
-    const key = tag.toLowerCase()
-    if (!seen.has(key)) {
-      seen.add(key)
-      unique.push(tag)
-    }
-  }
-
-  return unique
-}
-
 export const WebsiteCard = ({ website }: WebsiteCardProps) => {
-  const t = useT()
   const [imageError, setImageError] = useState(false)
 
-  const tags = useMemo(() => getUniqueTags(website.tags ?? ''), [website.tags])
-  const tagsLabel = tags.join(', ')
-  
+  const description = website.description?.trim()
   const hasLogo = website.logoUrl && !imageError
 
   const cardBody = (
     <div className="website-card__layout">
-      <div className="website-card__logo" aria-hidden={!hasLogo}>
-        {hasLogo ? (
-          <img
-            src={website.logoUrl}
-            alt={website.name}
-            loading="lazy"
-            onError={() => setImageError(true)}
-          />
-        ) : (
-          <DefaultLogoIcon />
-        )}
-      </div>
-      <div className="website-card__content">
-        <h3 className="website-card__title" title={website.name}>
-          {website.name}
-        </h3>
-        {tagsLabel ? (
-          <span
-            className="website-card__tags"
-            aria-label={`${t('websites.tags_label')}: ${tagsLabel}`}
-            title={tagsLabel}
-          >
-            {tagsLabel}
-          </span>
-        ) : null}
+      <div className="website-card__main">
+        <div className="website-card__logo" aria-hidden={!hasLogo}>
+          {hasLogo ? (
+            <img src={website.logoUrl} alt={website.name} loading="lazy" onError={() => setImageError(true)} />
+          ) : (
+            <DefaultLogoIcon />
+          )}
+        </div>
+        <div className="website-card__content">
+          <h3 className="website-card__title" title={website.name}>
+            {website.name}
+          </h3>
+          {description ? (
+            <p className="website-card__description" title={description}>
+              {description}
+            </p>
+          ) : null}
+        </div>
       </div>
     </div>
   )
-
-  // no description state or handlers — card shows tags only
 
   return (
     <article className="card website-card" aria-label={website.name}>
@@ -90,7 +61,6 @@ export const WebsiteCard = ({ website }: WebsiteCardProps) => {
       ) : (
         cardBody
       )}
-      {/* description and info icon removed — only tags are shown */}
     </article>
   )
 }
