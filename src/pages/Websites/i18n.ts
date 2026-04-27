@@ -8,6 +8,8 @@ const websitesTranslations = {
   'websites.view_all': { EN: 'View all', ZH: '查看全部' },
   'websites.view_all_count': { EN: 'View all ({count})', ZH: '查看全部（{count}）' },
   'websites.view_all_category': { EN: 'View all {category} websites ({count})', ZH: '查看全部{category}网站（{count}）' },
+  'websites.expand_category': { EN: 'Show {category} websites in rows ({count})', ZH: '多行显示{category}网站（{count}）' },
+  'websites.collapse_category': { EN: 'Show {category} websites in one scrolling row ({count})', ZH: '单行滚动显示{category}网站（{count}）' },
   'websites.sort_label': { EN: 'Sort', ZH: '排序' },
   'websites.sort.alpha': { EN: 'A → Z', ZH: '按字母' },
   'websites.sort.recency': { EN: 'Recently updated', ZH: '最近更新' },

@@ -37,8 +37,6 @@ const hasTag = (website: Website, tag: string | null) => {
 
 type SortOrder = 'displayOrder' | 'alpha' | 'recent'
 
-const LANE_ITEM_LIMIT = 8
-
 const getLaneId = (tag: string) => `websites-lane-${tag.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`
 
 const CategoryIcon = ({ tag }: { tag: string }) => {
@@ -179,6 +177,7 @@ export const WebsitesPage = () => {
   const { getTags } = useAppSettings()
   const [selectedTag, setSelectedTag] = useState<string | null>(null)
   const [sortOrder, setSortOrder] = useState<SortOrder>('displayOrder')
+  const [expandedLanes, setExpandedLanes] = useState<Set<string>>(() => new Set())
   const sectionTags = getTags('website_tags')
   const t = useT()
 
@@ -250,7 +249,7 @@ export const WebsitesPage = () => {
             tag,
             id: getLaneId(tag),
             count: laneItems.length,
-            items: laneItems.slice(0, LANE_ITEM_LIMIT),
+            items: laneItems,
           }
         })
         .filter((lane) => lane.items.length > 0),
@@ -270,6 +269,18 @@ export const WebsitesPage = () => {
   const handleSelectTag = (tag: string | null) => {
     setSelectedTag(tag)
     setCurrentPage(1)
+  }
+
+  const handleToggleLane = (tag: string) => {
+    setExpandedLanes((current) => {
+      const next = new Set(current)
+      if (next.has(tag)) {
+        next.delete(tag)
+      } else {
+        next.add(tag)
+      }
+      return next
+    })
   }
 
   return (
@@ -328,38 +339,47 @@ export const WebsitesPage = () => {
         <>
           {!isFilteredView && categoryLanes.length > 0 ? (
             <div className="websites-lanes" aria-label={t('websites.category_lanes')}>
-              {categoryLanes.map((lane) => (
-                <section key={lane.tag} className="websites-lane" aria-labelledby={lane.id}>
-                  <div className="websites-lane__header">
-                    <div>
-                      <h2 id={lane.id} className="websites-lane__title">
-                        <span className="websites-lane__icon">
-                          <CategoryIcon tag={lane.tag} />
-                        </span>
-                        {lane.tag}
-                      </h2>
-                    </div>
-                    <button
-                      type="button"
-                      className="websites-lane__view-all"
-                      onClick={() => handleSelectTag(lane.tag)}
-                      aria-label={t('websites.view_all_category', { category: lane.tag, count: lane.count })}
-                    >
-                      <span>{lane.count}</span>
-                      <svg viewBox="0 0 24 24" aria-hidden="true">
-                        <path d="M9 6l6 6-6 6" />
-                      </svg>
-                    </button>
-                  </div>
-                  <div className="websites-lane__track">
-                    {lane.items.map((item) => (
-                      <div key={`${lane.tag}-${item.id}`} className="websites-lane__item">
-                        <WebsiteCard website={item} />
+              {categoryLanes.map((lane) => {
+                const isExpanded = expandedLanes.has(lane.tag)
+
+                return (
+                  <section key={lane.tag} className={`websites-lane${isExpanded ? ' websites-lane--expanded' : ''}`} aria-labelledby={lane.id}>
+                    <div className="websites-lane__header">
+                      <div>
+                        <h2 id={lane.id} className="websites-lane__title">
+                          <span className="websites-lane__icon">
+                            <CategoryIcon tag={lane.tag} />
+                          </span>
+                          {lane.tag}
+                        </h2>
                       </div>
-                    ))}
-                  </div>
-                </section>
-              ))}
+                      <button
+                        type="button"
+                        className="websites-lane__view-all"
+                        onClick={() => handleToggleLane(lane.tag)}
+                        aria-expanded={isExpanded}
+                        aria-controls={`${lane.id}-track`}
+                        aria-label={t(isExpanded ? 'websites.collapse_category' : 'websites.expand_category', {
+                          category: lane.tag,
+                          count: lane.count,
+                        })}
+                      >
+                        <span>{lane.count}</span>
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                          {isExpanded ? <path d="M6 15l6-6 6 6" /> : <path d="M6 9l6 6 6-6" />}
+                        </svg>
+                      </button>
+                    </div>
+                    <div id={`${lane.id}-track`} className="websites-lane__track">
+                      {lane.items.map((item) => (
+                        <div key={`${lane.tag}-${item.id}`} className="websites-lane__item">
+                          <WebsiteCard website={item} />
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+                )
+              })}
             </div>
           ) : (
             <div className="websites-results">
