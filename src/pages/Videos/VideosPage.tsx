@@ -63,47 +63,44 @@ export const VideosPage = () => {
     skeletonItems,
   } = usePagedFetch(fetcher, { initialPageSize: 50, skeletonCount: 8 })
 
-  const displayItems = useMemo(
-    () => {
-      const trimmedQuery = searchQuery.trim()
-      let filtered = items.filter((item) => item.lang === language)
+  const displayItems = useMemo(() => {
+    const trimmedQuery = searchQuery.trim()
+    let filtered = items.filter((item) => item.lang === language)
 
-      if (trimmedQuery) {
-        filtered = filtered.filter((item) => matchesSearch(item, trimmedQuery))
-      }
+    if (trimmedQuery) {
+      filtered = filtered.filter((item) => matchesSearch(item, trimmedQuery))
+    }
 
-      if (selectedTag) {
-        filtered = filtered.filter((item) => hasTag(item, selectedTag))
-      }
+    if (selectedTag) {
+      filtered = filtered.filter((item) => hasTag(item, selectedTag))
+    }
 
-      // Sort items
-      switch (sortOrder) {
-        case 'displayOrder':
-          filtered.sort((a, b) => (a.displayOrder ?? 0) - (b.displayOrder ?? 0))
-          break
-        case 'alpha':
-          filtered.sort((a, b) => {
-            const aName = a.name ?? a.title ?? ''
-            const bName = b.name ?? b.title ?? ''
-            return aName.localeCompare(bName, language === 'ZH' ? 'zh-CN' : 'en', { sensitivity: 'base' })
-          })
-          break
-        case 'recent':
-          filtered.sort((a, b) => {
-            const aTime = new Date(a.updatedAt ?? '').getTime()
-            const bTime = new Date(b.updatedAt ?? '').getTime()
-            return Number.isNaN(bTime - aTime) ? 0 : bTime - aTime
-          })
-          break
-        default:
-          filtered.sort((a, b) => (a.displayOrder ?? 0) - (b.displayOrder ?? 0))
-          break
-      }
+    // Sort items
+    switch (sortOrder) {
+      case 'displayOrder':
+        filtered.sort((a, b) => (a.displayOrder ?? 0) - (b.displayOrder ?? 0))
+        break
+      case 'alpha':
+        filtered.sort((a, b) => {
+          const aName = a.name ?? a.title ?? ''
+          const bName = b.name ?? b.title ?? ''
+          return aName.localeCompare(bName, language === 'ZH' ? 'zh-CN' : 'en', { sensitivity: 'base' })
+        })
+        break
+      case 'recent':
+        filtered.sort((a, b) => {
+          const aTime = new Date(a.updatedAt ?? '').getTime()
+          const bTime = new Date(b.updatedAt ?? '').getTime()
+          return Number.isNaN(bTime - aTime) ? 0 : bTime - aTime
+        })
+        break
+      default:
+        filtered.sort((a, b) => (a.displayOrder ?? 0) - (b.displayOrder ?? 0))
+        break
+    }
 
-      return filtered
-    },
-    [items, language, searchQuery, selectedTag, sortOrder],
-  )
+    return filtered
+  }, [items, language, searchQuery, selectedTag, sortOrder])
 
   const handleSearchChange = (event: ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(event.target.value)
@@ -139,9 +136,11 @@ export const VideosPage = () => {
           {skeletonItems.map((item) => (
             <div key={item} className="card video-card video-card--skeleton" aria-hidden="true">
               <div className="video-card__media-wrapper">
-                <div className="skeleton skeleton--image" style={{ height: '180px', borderRadius: 'var(--radius-sm) var(--radius-sm) 0 0' }} />
+                <div className="video-card__media">
+                  <div className="skeleton skeleton--image" />
+                </div>
               </div>
-              <div className="video-card__body" style={{ marginTop: '1rem' }}>
+              <div className="video-card__body">
                 <div className="skeleton skeleton--line skeleton--line-lg" />
                 <div className="skeleton skeleton--line skeleton--line-sm" />
               </div>

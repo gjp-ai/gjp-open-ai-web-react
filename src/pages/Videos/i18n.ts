@@ -3,6 +3,8 @@ const videosTranslations = {
   'videos.subtitle': { EN: 'Watch curated videos about technology and innovation.', ZH: '观看科技、产品与创意视频。' },
   'videos.empty': { EN: 'No videos match your search.', ZH: '未找到匹配的视频。' },
   'videos.play_video': { EN: 'Play video', ZH: '播放视频' },
+  'videos.download': { EN: 'Download video', ZH: '下载视频' },
+  'videos.unavailable': { EN: 'Unavailable', ZH: '不可播放' },
   'video.watch': { EN: 'Watch', ZH: '观看' },
   'untitled.video': { EN: 'Untitled video', ZH: '未命名视频' },
   'placeholder.video': { EN: 'Video', ZH: '视频' },
