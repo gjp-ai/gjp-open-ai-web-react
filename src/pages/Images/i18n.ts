@@ -8,6 +8,7 @@ const imagesTranslations = {
   'images.filters.all': { EN: 'All', ZH: '全部' },
   'images.tags_filter': { EN: 'Filter by tag', ZH: '按标签筛选' },
   'images.search_clear': { EN: 'Clear search', ZH: '清除搜索' },
+  'images.search_placeholder': { EN: 'Search images or tags', ZH: '搜索图片或标签' },
   'images.sort_label': { EN: 'Sort images', ZH: '排序图片' },
   'images.sort.displayOrder': { EN: 'Display Order', ZH: '显示顺序' },
   'images.sort.alpha': { EN: 'Alphabetical', ZH: '字母顺序' },

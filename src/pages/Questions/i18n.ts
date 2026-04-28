@@ -9,6 +9,9 @@ const questionsTranslations = {
   'questions.tags_filter': { EN: 'Filter by tags', ZH: '按标签筛选' },
   'questions.filters.all': { EN: 'All', ZH: '全部' },
   'questions.search_clear': { EN: 'Clear search', ZH: '清除搜索' },
+  'questions.search_placeholder': { EN: 'Search questions, answers, or tags', ZH: '搜索问题、答案或标签' },
+  'questions.expand': { EN: 'Show answer for {question}', ZH: '查看“{question}”的答案' },
+  'questions.collapse': { EN: 'Hide answer for {question}', ZH: '收起“{question}”的答案' },
 }
 
 export default questionsTranslations

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useId, useMemo, useRef, useState } from 'react'
 import hljs from 'highlight.js'
 import 'highlight.js/styles/github.css'
 import type { Question } from '../../../shared/data/types'
@@ -12,7 +12,10 @@ const getUniqueTags = (tags: string) => {
   const unique: string[] = []
   const seen = new Set<string>()
 
-  const parts = tags.split(',').map((tag) => tag.trim()).filter(Boolean)
+  const parts = tags
+    .split(',')
+    .map((tag) => tag.trim())
+    .filter(Boolean)
   for (const tag of parts) {
     const key = tag.toLowerCase()
     if (!seen.has(key)) {
@@ -28,6 +31,7 @@ export const QuestionCard = ({ question }: QuestionCardProps) => {
   const t = useT()
   const [expanded, setExpanded] = useState(false)
   const answerRef = useRef<HTMLDivElement>(null)
+  const answerId = useId()
 
   const tags = useMemo(() => getUniqueTags(question.tags ?? ''), [question.tags])
 
@@ -56,7 +60,7 @@ export const QuestionCard = ({ question }: QuestionCardProps) => {
           const src = div.getAttribute('src')
           const width = div.getAttribute('width') || '600'
           const height = div.getAttribute('height') || '400'
-          
+
           if (src && div instanceof HTMLElement) {
             const iframe = document.createElement('iframe')
             iframe.src = src
@@ -65,9 +69,12 @@ export const QuestionCard = ({ question }: QuestionCardProps) => {
             iframe.className = div.className
             iframe.style.cssText = div.style.cssText
             iframe.setAttribute('frameborder', '0')
-            iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture')
+            iframe.setAttribute(
+              'allow',
+              'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture',
+            )
             iframe.setAttribute('allowfullscreen', 'true')
-            
+
             div.parentNode?.replaceChild(iframe, div)
           }
         })
@@ -76,13 +83,23 @@ export const QuestionCard = ({ question }: QuestionCardProps) => {
   }, [expanded, question.answer])
 
   return (
-    <article 
-      className="card question-card" 
+    <article
+      className={`card question-card${expanded ? ' question-card--expanded' : ''}`}
       aria-label={question.question}
-      onClick={toggleExpanded}
     >
-      <div className="question-card__header">
+      <button
+        type="button"
+        className="question-card__header"
+        onClick={toggleExpanded}
+        aria-expanded={expanded}
+        aria-controls={answerId}
+        aria-label={t(expanded ? 'questions.collapse' : 'questions.expand', { question: question.question })}
+      >
+        <span className="question-card__mark" aria-hidden="true">
+          Q
+        </span>
         <div className="question-card__content">
+          <h3 className="question-card__question">{question.question}</h3>
           {tags.length > 0 && (
             <div className="question-card__tags">
               {tags.map((tag) => (
@@ -92,27 +109,33 @@ export const QuestionCard = ({ question }: QuestionCardProps) => {
               ))}
             </div>
           )}
-          <h3 className="question-card__question">
-            {question.question}
-          </h3>
         </div>
         <div className={`question-card__icon ${expanded ? 'question-card__icon--expanded' : ''}`}>
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
             <polyline points="6 9 12 15 18 9"></polyline>
           </svg>
         </div>
-      </div>
-      
+      </button>
+
       {expanded && (
         <>
-          <div 
+          <div
+            id={answerId}
             className="question-card__answer"
             ref={answerRef}
             dangerouslySetInnerHTML={{ __html: question.answer }}
-            onClick={(e) => e.stopPropagation()}
           />
           <div className="question-card__footer">
-            <button 
+            <button
               className="question-card__close-btn"
               onClick={(e) => {
                 e.stopPropagation()
@@ -120,7 +143,16 @@ export const QuestionCard = ({ question }: QuestionCardProps) => {
               }}
               aria-label={t('common.close')}
             >
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
                 <polyline points="18 15 12 9 6 15"></polyline>
               </svg>
             </button>

@@ -71,12 +71,17 @@ export const Toolbar = ({
           className="toolbar__search-input"
           type="search"
           value={searchQuery}
-          placeholder={t('search.placeholder')}
-          aria-label={t('search.placeholder')}
+          placeholder={t(`${namespace}.search_placeholder`)}
+          aria-label={t(`${namespace}.search_placeholder`)}
           onChange={onSearchChange}
         />
         {searchQuery ? (
-          <button type="button" className="toolbar__clear" onClick={onClearSearch} aria-label={t(`${namespace}.search_clear`)}>
+          <button
+            type="button"
+            className="toolbar__clear"
+            onClick={onClearSearch}
+            aria-label={t(`${namespace}.search_clear`)}
+          >
             ×
           </button>
         ) : null}
@@ -108,21 +113,60 @@ export const Toolbar = ({
 
       <div className="toolbar__actions" ref={actionsRef}>
         <div className="toolbar-sort-menu">
-          <button type="button" aria-label={t(`${namespace}.sort_label`)} className="toolbar-sort-button" onClick={toggleSortMenu}>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-              <path d="M3 6h18M6 12h12M10 18h4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+          <button
+            type="button"
+            aria-label={t(`${namespace}.sort_label`)}
+            className="toolbar-sort-button"
+            onClick={toggleSortMenu}
+          >
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true"
+            >
+              <path
+                d="M3 6h18M6 12h12M10 18h4"
+                stroke="currentColor"
+                strokeWidth="1.6"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
             </svg>
             <span>{t(`${namespace}.sort_label`)}</span>
           </button>
           {showSortMenu ? (
             <div className="sort-menu" role="menu">
-              <button type="button" className={`sort-menu__item${sortOrder === 'displayOrder' ? ' active' : ''}`} onClick={() => { setSortOrder('displayOrder'); setShowSortMenu(false); }}>
+              <button
+                type="button"
+                className={`sort-menu__item${sortOrder === 'displayOrder' ? ' active' : ''}`}
+                onClick={() => {
+                  setSortOrder('displayOrder')
+                  setShowSortMenu(false)
+                }}
+              >
                 {t(`${namespace}.sort.displayOrder`)}
               </button>
-              <button type="button" className={`sort-menu__item${sortOrder === 'alpha' ? ' active' : ''}`} onClick={() => { setSortOrder('alpha'); setShowSortMenu(false); }}>
+              <button
+                type="button"
+                className={`sort-menu__item${sortOrder === 'alpha' ? ' active' : ''}`}
+                onClick={() => {
+                  setSortOrder('alpha')
+                  setShowSortMenu(false)
+                }}
+              >
                 {t(`${namespace}.sort.alpha`)}
               </button>
-              <button type="button" className={`sort-menu__item${sortOrder === 'recent' ? ' active' : ''}`} onClick={() => { setSortOrder('recent'); setShowSortMenu(false); }}>
+              <button
+                type="button"
+                className={`sort-menu__item${sortOrder === 'recent' ? ' active' : ''}`}
+                onClick={() => {
+                  setSortOrder('recent')
+                  setShowSortMenu(false)
+                }}
+              >
                 {t(`${namespace}.sort.recency`)}
               </button>
             </div>

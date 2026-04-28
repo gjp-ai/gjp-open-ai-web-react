@@ -5,6 +5,7 @@ const articlesTranslations = {
   'articles.tags_filter': { EN: 'Filter by tag', ZH: '按标签筛选' },
   'articles.filters.all': { EN: 'All', ZH: '全部' },
   'articles.search_clear': { EN: 'Clear search', ZH: '清除搜索' },
+  'articles.search_placeholder': { EN: 'Search articles or tags', ZH: '搜索文章或标签' },
   'articles.sort_label': { EN: 'Sort articles', ZH: '排序文章' },
   'articles.sort.displayOrder': { EN: 'Default Order', ZH: '默认排序' },
   'articles.sort.alpha': { EN: 'Alphabetical', ZH: '按字母排序' },

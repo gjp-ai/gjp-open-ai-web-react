@@ -9,6 +9,7 @@ const videosTranslations = {
   'videos.filters.all': { EN: 'All', ZH: '全部' },
   'videos.tags_filter': { EN: 'Filter by tag', ZH: '按标签筛选' },
   'videos.search_clear': { EN: 'Clear search', ZH: '清除搜索' },
+  'videos.search_placeholder': { EN: 'Search videos or tags', ZH: '搜索视频或标签' },
   'videos.sort_label': { EN: 'Sort videos', ZH: '排序视频' },
   'videos.sort.displayOrder': { EN: 'Display Order', ZH: '显示顺序' },
   'videos.sort.alpha': { EN: 'Alphabetical', ZH: '字母顺序' },

@@ -64,36 +64,35 @@ export const QuestionsPage = () => {
     skeletonItems,
   } = usePagedFetch(fetcher, { initialPageSize: 500, skeletonCount: 5 })
 
-  const displayItems = useMemo(
-    () => {
-      const trimmedQuery = searchQuery.trim()
-      let filtered = items.filter((item) => item.lang === language)
+  const displayItems = useMemo(() => {
+    const trimmedQuery = searchQuery.trim()
+    let filtered = items.filter((item) => item.lang === language)
 
-      if (trimmedQuery) {
-        filtered = filtered.filter((item) => matchesSearch(item, trimmedQuery))
-      }
+    if (trimmedQuery) {
+      filtered = filtered.filter((item) => matchesSearch(item, trimmedQuery))
+    }
 
-      if (selectedTag) {
-        filtered = filtered.filter((item) => hasTag(item, selectedTag))
-      }
+    if (selectedTag) {
+      filtered = filtered.filter((item) => hasTag(item, selectedTag))
+    }
 
-      // Sort items
-      switch (sortOrder) {
-        case 'displayOrder':
-          filtered.sort((a, b) => (a.displayOrder ?? 0) - (b.displayOrder ?? 0))
-          break
-        case 'alpha':
-          filtered.sort((a, b) => a.question.localeCompare(b.question, language === 'ZH' ? 'zh-CN' : 'en', { sensitivity: 'base' }))
-          break
-        case 'recent':
-          filtered.sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
-          break
-      }
+    // Sort items
+    switch (sortOrder) {
+      case 'displayOrder':
+        filtered.sort((a, b) => (a.displayOrder ?? 0) - (b.displayOrder ?? 0))
+        break
+      case 'alpha':
+        filtered.sort((a, b) =>
+          a.question.localeCompare(b.question, language === 'ZH' ? 'zh-CN' : 'en', { sensitivity: 'base' }),
+        )
+        break
+      case 'recent':
+        filtered.sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
+        break
+    }
 
-      return filtered
-    },
-    [items, searchQuery, selectedTag, sortOrder, language]
-  )
+    return filtered
+  }, [items, searchQuery, selectedTag, sortOrder, language])
 
   const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value)
@@ -116,7 +115,7 @@ export const QuestionsPage = () => {
   }
 
   return (
-    <div className="page-container">
+    <div className="page-container questions-page">
       <Toolbar
         sectionTags={sectionTags}
         selectedTag={selectedTag}
