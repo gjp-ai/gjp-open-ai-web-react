@@ -201,6 +201,52 @@
   margin-right: 1px;
 }
 
+.questions-index__pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.7rem 0.8rem;
+  border-top: 1px solid var(--color-border);
+  background: var(--color-surface);
+}
+
+.questions-index__page-button {
+  min-width: 4.25rem;
+  min-height: 34px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  font-size: 0.82rem;
+  font-weight: 700;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.questions-index__page-button:hover,
+.questions-index__page-button:focus-visible {
+  border-color: var(--color-primary);
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
+  outline: none;
+}
+
+.questions-index__page-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.questions-index__page-status {
+  color: var(--color-muted);
+  font-size: 0.8rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
 .questions-detail {
   min-height: 460px;
   overflow: hidden;
@@ -245,11 +291,15 @@
   padding: 1rem 1.15rem 1.15rem;
 }
 
-.questions-detail__answer.question-card__answer>* {
+.questions-detail__answer.question-card__answer > * {
   max-width: 100%;
 }
 
 .questions-accordion {
+  display: none;
+}
+
+.questions-accordion__pagination {
   display: none;
 }
 
@@ -569,6 +619,12 @@
   background: rgba(125, 180, 255, 0.14);
 }
 
+.theme-dark .questions-index__pagination,
+.theme-dark .questions-index__page-button {
+  background: rgba(20, 27, 43, 0.82);
+  border-color: rgba(148, 163, 184, 0.14);
+}
+
 @media (min-width: 1400px) {
   .questions-workspace {
     grid-template-columns: minmax(360px, 440px) minmax(0, 1fr);
@@ -607,6 +663,14 @@
 
   .questions-accordion {
     display: grid;
+  }
+
+  .questions-accordion__pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    padding: 0 0.75rem;
   }
 
   .questions-accordion--loading {

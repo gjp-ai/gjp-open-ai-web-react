@@ -38,6 +38,8 @@ const hasTag = (question: Question, tag: string | null) => {
 
 type SortOrder = 'displayOrder' | 'alpha' | 'recent'
 
+const QUESTIONS_PER_INDEX_PAGE = 8
+
 const getUniqueTags = (tags: string | undefined) => {
   const unique: string[] = []
   const seen = new Set<string>()
@@ -61,13 +63,16 @@ export const QuestionsPage = () => {
   const [selectedTag, setSelectedTag] = useState<string | null>(null)
   const [sortOrder, setSortOrder] = useState<SortOrder>('displayOrder')
   const [selectedQuestionId, setSelectedQuestionId] = useState<string | null>(null)
+  const [indexPage, setIndexPage] = useState(1)
   const sectionTags = getTags('question_tags')
   const t = useT()
+  const backendSearchQuery = searchQuery.trim() || undefined
+  const backendTag = selectedTag ?? undefined
 
   const fetcher = useCallback(
     (page: number, size: number, lang: string, signal: AbortSignal) =>
-      getQuestions(page, size, undefined, undefined, lang, signal),
-    [],
+      getQuestions(page, size, backendSearchQuery, backendTag, lang, signal),
+    [backendSearchQuery, backendTag],
   )
 
   const {
@@ -118,6 +123,12 @@ export const QuestionsPage = () => {
     [displayItems, selectedQuestionId],
   )
 
+  const indexTotalPages = Math.max(1, Math.ceil(displayItems.length / QUESTIONS_PER_INDEX_PAGE))
+  const indexPageItems = useMemo(
+    () => displayItems.slice((indexPage - 1) * QUESTIONS_PER_INDEX_PAGE, indexPage * QUESTIONS_PER_INDEX_PAGE),
+    [displayItems, indexPage],
+  )
+
   useEffect(() => {
     if (displayItems.length === 0) {
       setSelectedQuestionId(null)
@@ -129,19 +140,38 @@ export const QuestionsPage = () => {
     }
   }, [displayItems, selectedQuestionId])
 
+  useEffect(() => {
+    if (indexPage > indexTotalPages) {
+      setIndexPage(indexTotalPages)
+    }
+  }, [indexPage, indexTotalPages])
+
+  useEffect(() => {
+    if (indexPageItems.length === 0) {
+      return
+    }
+
+    if (!selectedQuestionId || !indexPageItems.some((item) => item.id === selectedQuestionId)) {
+      setSelectedQuestionId(indexPageItems[0].id)
+    }
+  }, [indexPageItems, selectedQuestionId])
+
   const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value)
     setCurrentPage(1)
+    setIndexPage(1)
   }
 
   const handleClearSearch = () => {
     setSearchQuery('')
     setCurrentPage(1)
+    setIndexPage(1)
   }
 
   const handleTagSelect = (tag: string | null) => {
     setSelectedTag(tag)
     setCurrentPage(1)
+    setIndexPage(1)
   }
 
   const handlePageChange = (page: number) => {
@@ -226,10 +256,10 @@ export const QuestionsPage = () => {
                 <aside className="questions-index" aria-label={t('questions.index_label')}>
                   <div className="questions-index__header">
                     <span>{t('questions.index_title')}</span>
-                    <strong>{displayItems.length}</strong>
+                    <strong>{t('questions.index_count', { count: displayItems.length })}</strong>
                   </div>
                   <div className="questions-index__list">
-                    {displayItems.map((question) => {
+                    {indexPageItems.map((question) => {
                       const tags = getUniqueTags(question.tags)
                       const isSelected = selectedQuestion?.id === question.id
 
@@ -258,6 +288,32 @@ export const QuestionsPage = () => {
                       )
                     })}
                   </div>
+                  {indexTotalPages > 1 ? (
+                    <div className="questions-index__pagination" aria-label={t('questions.index_pagination_label')}>
+                      <button
+                        type="button"
+                        className="questions-index__page-button"
+                        onClick={() => setIndexPage((page) => Math.max(1, page - 1))}
+                        disabled={indexPage === 1}
+                      >
+                        {t('pagination.prev')}
+                      </button>
+                      <span className="questions-index__page-status" aria-live="polite">
+                        {t('questions.index_page_status', {
+                          page: indexPage,
+                          total: indexTotalPages,
+                        })}
+                      </span>
+                      <button
+                        type="button"
+                        className="questions-index__page-button"
+                        onClick={() => setIndexPage((page) => Math.min(indexTotalPages, page + 1))}
+                        disabled={indexPage === indexTotalPages}
+                      >
+                        {t('pagination.next')}
+                      </button>
+                    </div>
+                  ) : null}
                 </aside>
 
                 {selectedQuestion ? (
@@ -293,10 +349,36 @@ export const QuestionsPage = () => {
               </section>
 
               <div className="grid grid--questions questions-accordion">
-                {displayItems.map((question) => (
+                {indexPageItems.map((question) => (
                   <QuestionCard key={question.id} question={question} />
                 ))}
               </div>
+              {indexTotalPages > 1 ? (
+                <div className="questions-accordion__pagination" aria-label={t('questions.index_pagination_label')}>
+                  <button
+                    type="button"
+                    className="questions-index__page-button"
+                    onClick={() => setIndexPage((page) => Math.max(1, page - 1))}
+                    disabled={indexPage === 1}
+                  >
+                    {t('pagination.prev')}
+                  </button>
+                  <span className="questions-index__page-status" aria-live="polite">
+                    {t('questions.index_page_status', {
+                      page: indexPage,
+                      total: indexTotalPages,
+                    })}
+                  </span>
+                  <button
+                    type="button"
+                    className="questions-index__page-button"
+                    onClick={() => setIndexPage((page) => Math.min(indexTotalPages, page + 1))}
+                    disabled={indexPage === indexTotalPages}
+                  >
+                    {t('pagination.next')}
+                  </button>
+                </div>
+              ) : null}
             </>
           ) : (
             <div className="status status--empty">{t('questions.empty')}</div>
