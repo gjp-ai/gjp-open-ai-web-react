@@ -61,7 +61,6 @@
 
 .article-card__media {
   width: 100%;
-  aspect-ratio: 16 / 9;
   overflow: hidden;
   background: var(--color-bg-tertiary);
   position: relative;
@@ -222,7 +221,6 @@
 
 .article-detail__hero {
   width: 100%;
-  aspect-ratio: 16 / 8;
   border-radius: var(--radius-md);
   overflow: hidden;
   margin-bottom: 0;
@@ -712,7 +710,6 @@
 
 .article-detail__body .youtube-embed {
   max-width: 100%;
-  aspect-ratio: 16 / 9;
 }
 
 /* Table styling */
@@ -794,7 +791,6 @@
 
   .article-detail__hero {
     border-radius: 0;
-    aspect-ratio: 16 / 7;
   }
 
   .grid--articles .card {
