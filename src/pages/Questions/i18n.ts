@@ -1,4 +1,15 @@
 const questionsTranslations = {
+  'questions.eyebrow': { EN: 'Knowledge base', ZH: '知识库' },
+  'questions.title': { EN: 'AI Q&A', ZH: 'AI 问答' },
+  'questions.subtitle': {
+    EN: 'Browse concise answers to common AI concepts, model terms, and practical workflows.',
+    ZH: '浏览常见 AI 概念、模型术语和实用工作流的简明答案。',
+  },
+  'questions.meta_label': { EN: 'available', ZH: '可浏览' },
+  'questions.workspace_label': { EN: 'Question browser', ZH: '问题浏览器' },
+  'questions.index_label': { EN: 'Question list', ZH: '问题列表' },
+  'questions.index_title': { EN: 'Questions', ZH: '问题' },
+  'questions.selected_label': { EN: 'Selected answer', ZH: '当前答案' },
   'questions.empty': { EN: 'No questions match your search.', ZH: '未找到匹配的问题。' },
   'questions.result_count': { EN: '{count} questions', ZH: '{count} 个问题' },
   'questions.sort_label': { EN: 'Sort', ZH: '排序' },

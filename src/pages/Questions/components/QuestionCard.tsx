@@ -1,8 +1,7 @@
-import { useEffect, useId, useMemo, useRef, useState } from 'react'
-import hljs from 'highlight.js'
-import 'highlight.js/styles/github.css'
+import { useId, useMemo, useState } from 'react'
 import type { Question } from '../../../shared/data/types'
 import { useT } from '../../../shared/i18n'
+import { QuestionAnswer } from './QuestionAnswer'
 
 interface QuestionCardProps {
   question: Question
@@ -30,7 +29,6 @@ const getUniqueTags = (tags: string) => {
 export const QuestionCard = ({ question }: QuestionCardProps) => {
   const t = useT()
   const [expanded, setExpanded] = useState(false)
-  const answerRef = useRef<HTMLDivElement>(null)
   const answerId = useId()
 
   const tags = useMemo(() => getUniqueTags(question.tags ?? ''), [question.tags])
@@ -38,49 +36,6 @@ export const QuestionCard = ({ question }: QuestionCardProps) => {
   const toggleExpanded = () => {
     setExpanded(!expanded)
   }
-
-  useEffect(() => {
-    if (expanded && answerRef.current) {
-      // highlight.js will find <pre><code> blocks and highlight them.
-      // Run on next tick to ensure DOM is updated.
-      requestAnimationFrame(() => {
-        try {
-          answerRef.current?.querySelectorAll('pre code').forEach((block) => {
-            hljs.highlightElement(block as HTMLElement)
-          })
-        } catch (e) {
-          // swallow highlighting errors to avoid breaking the page
-          // (e.g., unknown language or malformed nodes)
-          console.error('highlight.js error', e)
-        }
-
-        // Process video embeds: convert <div> with src to <iframe>
-        const videoEmbeds = answerRef.current?.querySelectorAll('.video-embed[data-provider="youtube"]')
-        videoEmbeds?.forEach((div) => {
-          const src = div.getAttribute('src')
-          const width = div.getAttribute('width') || '600'
-          const height = div.getAttribute('height') || '400'
-
-          if (src && div instanceof HTMLElement) {
-            const iframe = document.createElement('iframe')
-            iframe.src = src
-            iframe.width = width
-            iframe.height = height
-            iframe.className = div.className
-            iframe.style.cssText = div.style.cssText
-            iframe.setAttribute('frameborder', '0')
-            iframe.setAttribute(
-              'allow',
-              'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture',
-            )
-            iframe.setAttribute('allowfullscreen', 'true')
-
-            div.parentNode?.replaceChild(iframe, div)
-          }
-        })
-      })
-    }
-  }, [expanded, question.answer])
 
   return (
     <article
@@ -128,12 +83,7 @@ export const QuestionCard = ({ question }: QuestionCardProps) => {
 
       {expanded && (
         <>
-          <div
-            id={answerId}
-            className="question-card__answer"
-            ref={answerRef}
-            dangerouslySetInnerHTML={{ __html: question.answer }}
-          />
+          <QuestionAnswer id={answerId} answer={question.answer} />
           <div className="question-card__footer">
             <button
               className="question-card__close-btn"
