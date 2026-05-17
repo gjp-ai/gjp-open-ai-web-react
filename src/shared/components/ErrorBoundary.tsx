@@ -60,14 +60,8 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
               <line x1="12" y1="16" x2="12.01" y2="16" />
             </svg>
             <h2 className="error-boundary__title">Something went wrong</h2>
-            <p className="error-boundary__message">
-              {this.state.error?.message ?? 'An unexpected error occurred.'}
-            </p>
-            <button
-              type="button"
-              className="button button--primary"
-              onClick={this.handleRetry}
-            >
+            <p className="error-boundary__message">{this.state.error?.message ?? 'An unexpected error occurred.'}</p>
+            <button type="button" className="button button--primary" onClick={this.handleRetry}>
               Try again
             </button>
           </div>

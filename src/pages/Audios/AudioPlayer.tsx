@@ -28,18 +28,18 @@ export const AudioPlayer = ({
   useEffect(() => {
     if (audioRef.current) {
       const audio = audioRef.current
-      
+
       // Reset state
       setCurrentTime(0)
       setDuration(0)
-      
+
       // With key={item.id}, we have a fresh element, so we don't need load()
       // Just attempt to play
       const playPromise = audio.play()
       if (playPromise !== undefined) {
         playPromise.catch((error) => {
           if (error.name !== 'AbortError') {
-            console.error("Playback failed:", error)
+            console.error('Playback failed:', error)
           }
         })
       }
@@ -54,7 +54,7 @@ export const AudioPlayer = ({
         const playPromise = audioRef.current.play()
         if (playPromise !== undefined) {
           playPromise.catch((error) => {
-            console.error("Toggle play failed:", error)
+            console.error('Toggle play failed:', error)
           })
         }
       }
@@ -103,10 +103,7 @@ export const AudioPlayer = ({
           >
             ✕
           </button>
-          <div
-            className="audio-card__subtitle-content"
-            dangerouslySetInnerHTML={{ __html: item.subtitle }}
-          />
+          <div className="audio-card__subtitle-content" dangerouslySetInnerHTML={{ __html: item.subtitle }} />
         </div>
       ) : null}
 
@@ -120,7 +117,7 @@ export const AudioPlayer = ({
           onChange={handleSeek}
           className="audio-card__progress-bar"
           style={{
-            backgroundSize: `${(currentTime / duration) * 100}% 100%`
+            backgroundSize: `${(currentTime / duration) * 100}% 100%`,
           }}
         />
         <span className="audio-card__time">{formatTime(duration)}</span>
@@ -136,7 +133,7 @@ export const AudioPlayer = ({
             title="Previous song"
           >
             <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-              <path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/>
+              <path d="M6 6h2v12H6zm3.5 6l8.5 6V6z" />
             </svg>
           </button>
           <button
@@ -147,11 +144,11 @@ export const AudioPlayer = ({
           >
             {isPlaying ? (
               <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+                <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
               </svg>
             ) : (
               <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                <path d="M8 5v14l11-7z"/>
+                <path d="M8 5v14l11-7z" />
               </svg>
             )}
           </button>
@@ -163,18 +160,14 @@ export const AudioPlayer = ({
             title="Next song"
           >
             <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-              <path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/>
+              <path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z" />
             </svg>
           </button>
         </div>
 
         <div className="audio-card__player-info">
-          <span className="audio-card__player-title">
-            {item.title ?? item.name ?? t('untitled.audio')}
-          </span>
-          {item.artist && (
-            <span className="audio-card__player-artist"> • {item.artist}</span>
-          )}
+          <span className="audio-card__player-title">{item.title ?? item.name ?? t('untitled.audio')}</span>
+          {item.artist && <span className="audio-card__player-artist"> • {item.artist}</span>}
         </div>
 
         <div className="audio-card__player-extras">
@@ -189,7 +182,9 @@ export const AudioPlayer = ({
             >
               CC
             </button>
-          ) : <div style={{ width: 40 }} />}
+          ) : (
+            <div style={{ width: 40 }} />
+          )}
         </div>
       </div>
 
@@ -204,9 +199,7 @@ export const AudioPlayer = ({
         onPause={() => setIsPlaying(false)}
         preload="auto"
       >
-        {activeCaptionsUrl ? (
-          <track kind="captions" srcLang="en" src={activeCaptionsUrl} />
-        ) : null}
+        {activeCaptionsUrl ? <track kind="captions" srcLang="en" src={activeCaptionsUrl} /> : null}
       </audio>
     </div>
   )

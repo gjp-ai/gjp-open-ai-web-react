@@ -121,8 +121,6 @@
   box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
 }
 
-
-
 .audio-card__player-info {
   flex: 1;
   min-width: 0;
@@ -215,7 +213,7 @@
   cursor: pointer;
   transition: transform 0.1s;
   border: 2px solid var(--color-surface);
-  box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 }
 
 .audio-card__progress-bar::-webkit-slider-thumb:hover {
@@ -229,7 +227,7 @@
   background: var(--color-primary);
   cursor: pointer;
   border: 2px solid var(--color-surface);
-  box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 }
 
 .audio-card__play-pause {
@@ -246,7 +244,7 @@
   padding-left: 4px; /* Optical alignment for play icon */
 }
 
-.audio-card__play-pause[aria-label="Pause"] {
+.audio-card__play-pause[aria-label='Pause'] {
   padding-left: 0;
 }
 
@@ -267,7 +265,9 @@
   font-weight: 600;
   font-size: 1rem;
   cursor: pointer;
-  transition: background 0.2s ease, color 0.2s ease;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
   min-width: 40px;
   height: 36px;
   display: flex;
@@ -357,7 +357,7 @@
     border-radius: 50px;
   }
   .grid--audios .card {
-    border-radius: 50px ;
+    border-radius: 50px;
   }
   .audios-page .grid {
     gap: 2.5rem;

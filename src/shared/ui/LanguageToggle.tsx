@@ -16,7 +16,16 @@ export const LanguageToggle = () => {
       title={label}
     >
       <div className="icon-toggle-button__wrapper">
-        <svg className="icon-toggle-button__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+        <svg
+          className="icon-toggle-button__icon"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          aria-hidden
+        >
           <circle cx="12" cy="12" r="10" />
           <path d="M2 12h20M12 2a15 15 0 010 20" />
         </svg>

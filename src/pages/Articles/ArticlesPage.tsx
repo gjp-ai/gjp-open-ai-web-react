@@ -63,43 +63,42 @@ export const ArticlesPage = () => {
     skeletonItems,
   } = usePagedFetch(fetcher, { initialPageSize: 50, skeletonCount: 8 })
 
-  const displayItems = useMemo(
-    () => {
-      const trimmedQuery = searchQuery.trim()
-      let filtered = items.filter((item) => item.lang === language)
+  const displayItems = useMemo(() => {
+    const trimmedQuery = searchQuery.trim()
+    let filtered = items.filter((item) => item.lang === language)
 
-      if (trimmedQuery) {
-        filtered = filtered.filter((item) => matchesSearch(item, trimmedQuery))
-      }
+    if (trimmedQuery) {
+      filtered = filtered.filter((item) => matchesSearch(item, trimmedQuery))
+    }
 
-      if (selectedTag) {
-        filtered = filtered.filter((item) => hasTag(item, selectedTag))
-      }
+    if (selectedTag) {
+      filtered = filtered.filter((item) => hasTag(item, selectedTag))
+    }
 
-      // Sort items
-      switch (sortOrder) {
-        case 'displayOrder':
-          filtered.sort((a, b) => (a.displayOrder ?? 0) - (b.displayOrder ?? 0))
-          break
-        case 'alpha':
-          filtered.sort((a, b) => a.title.localeCompare(b.title, language === 'ZH' ? 'zh-CN' : 'en', { sensitivity: 'base' }))
-          break
-        case 'recent':
-          filtered.sort((a, b) => {
-            const aTime = new Date(a.updatedAt ?? '').getTime()
-            const bTime = new Date(b.updatedAt ?? '').getTime()
-            return Number.isNaN(bTime - aTime) ? 0 : bTime - aTime
-          })
-          break
-        default:
-          filtered.sort((a, b) => (a.displayOrder ?? 0) - (b.displayOrder ?? 0))
-          break
-      }
+    // Sort items
+    switch (sortOrder) {
+      case 'displayOrder':
+        filtered.sort((a, b) => (a.displayOrder ?? 0) - (b.displayOrder ?? 0))
+        break
+      case 'alpha':
+        filtered.sort((a, b) =>
+          a.title.localeCompare(b.title, language === 'ZH' ? 'zh-CN' : 'en', { sensitivity: 'base' }),
+        )
+        break
+      case 'recent':
+        filtered.sort((a, b) => {
+          const aTime = new Date(a.updatedAt ?? '').getTime()
+          const bTime = new Date(b.updatedAt ?? '').getTime()
+          return Number.isNaN(bTime - aTime) ? 0 : bTime - aTime
+        })
+        break
+      default:
+        filtered.sort((a, b) => (a.displayOrder ?? 0) - (b.displayOrder ?? 0))
+        break
+    }
 
-      return filtered
-    },
-    [items, language, searchQuery, selectedTag, sortOrder],
-  )
+    return filtered
+  }, [items, language, searchQuery, selectedTag, sortOrder])
 
   const handleSearchChange = (event: ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(event.target.value)

@@ -140,7 +140,10 @@ export const ArticleDetailPage = () => {
           iframe.className = div.className
           iframe.style.cssText = div.style.cssText
           iframe.setAttribute('frameborder', '0')
-          iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture')
+          iframe.setAttribute(
+            'allow',
+            'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture',
+          )
           iframe.setAttribute('allowfullscreen', 'true')
 
           div.parentNode?.replaceChild(iframe, div)
@@ -154,7 +157,10 @@ export const ArticleDetailPage = () => {
       <section className="page article-detail article-detail--skeleton">
         <div className="article-detail__header">
           <div className="skeleton skeleton--icon" style={{ width: '40px', height: '40px', borderRadius: '50%' }} />
-          <div className="skeleton skeleton--line skeleton--line-lg" style={{ height: '2rem', flex: 1, maxWidth: '60%', margin: '0 auto' }} />
+          <div
+            className="skeleton skeleton--line skeleton--line-lg"
+            style={{ height: '2rem', flex: 1, maxWidth: '60%', margin: '0 auto' }}
+          />
         </div>
 
         <div className="article-detail__hero">
@@ -178,7 +184,10 @@ export const ArticleDetailPage = () => {
             <div className="skeleton skeleton--line" style={{ width: '92%', marginBottom: '1rem' }} />
             <div className="skeleton skeleton--line" style={{ width: '40%', marginBottom: '2rem' }} />
 
-            <div className="skeleton skeleton--image" style={{ width: '100%', height: '300px', marginBottom: '2rem' }} />
+            <div
+              className="skeleton skeleton--image"
+              style={{ width: '100%', height: '300px', marginBottom: '2rem' }}
+            />
 
             <div className="skeleton skeleton--line" style={{ width: '100%', marginBottom: '1rem' }} />
             <div className="skeleton skeleton--line" style={{ width: '95%', marginBottom: '1rem' }} />
@@ -207,7 +216,16 @@ export const ArticleDetailPage = () => {
     <section className="page article-detail">
       <div className="article-detail__header">
         <Link to="/articles" className="article-detail__back-link">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
             <path d="M19 12H5M12 19l-7-7 7-7" />
           </svg>
         </Link>
@@ -220,13 +238,31 @@ export const ArticleDetailPage = () => {
             title={coverVisible ? t('articles.hide_cover') : t('articles.show_cover')}
           >
             {coverVisible ? (
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
                 <rect x="3" y="3" width="18" height="18" rx="2" />
                 <path d="M3 9h18" />
                 <path d="M9 21V9" />
               </svg>
             ) : (
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
                 <rect x="3" y="3" width="18" height="18" rx="2" />
                 <line x1="9" y1="3" x2="9" y2="21" strokeDasharray="3 3" />
               </svg>
@@ -242,19 +278,11 @@ export const ArticleDetailPage = () => {
       ) : null}
 
       <article className="article-detail__content">
-        <div
-          className="article-detail__body"
-          dangerouslySetInnerHTML={{ __html: article.content }}
-        />
+        <div className="article-detail__body" dangerouslySetInnerHTML={{ __html: article.content }} />
 
         {article.originalUrl ? (
           <div className="article-detail__actions">
-            <a
-              href={article.originalUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="button button--primary"
-            >
+            <a href={article.originalUrl} target="_blank" rel="noopener noreferrer" className="button button--primary">
               {t('articles.view_original')}
             </a>
           </div>
@@ -273,10 +301,9 @@ export const ArticleDetailPage = () => {
           ) : null}
           {article.updatedAt ? (
             <time className="article-detail__date">
-              {t('articles.updateAt')}:  {new Date(article.updatedAt).toLocaleDateString()}
+              {t('articles.updateAt')}: {new Date(article.updatedAt).toLocaleDateString()}
             </time>
           ) : null}
-
         </div>
       </article>
     </section>

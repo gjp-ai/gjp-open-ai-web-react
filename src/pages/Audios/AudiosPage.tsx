@@ -22,7 +22,10 @@ const matchesSearch = (item: MediaItem, query: string) => {
 
 const hasTag = (item: MediaItem, tag: string | null) => {
   if (!tag) return true
-  const tagList = (item.tags ?? '').split(',').map((t) => t.trim().toLowerCase()).filter(Boolean)
+  const tagList = (item.tags ?? '')
+    .split(',')
+    .map((t) => t.trim().toLowerCase())
+    .filter(Boolean)
   return tagList.includes(tag.toLowerCase())
 }
 
@@ -43,8 +46,18 @@ export const AudiosPage = () => {
     [],
   )
 
-  const { items, loading, error, currentPage, setCurrentPage, totalElements, totalPages, pageSize, handlePageSizeChange, skeletonItems } =
-    usePagedFetch(fetcher, { initialPageSize: 50, skeletonCount: 20 })
+  const {
+    items,
+    loading,
+    error,
+    currentPage,
+    setCurrentPage,
+    totalElements,
+    totalPages,
+    pageSize,
+    handlePageSizeChange,
+    skeletonItems,
+  } = usePagedFetch(fetcher, { initialPageSize: 50, skeletonCount: 20 })
 
   const displayItems = useMemo(() => {
     const trimmedQuery = searchQuery.trim()
@@ -53,26 +66,49 @@ export const AudiosPage = () => {
     if (selectedTag) filtered = filtered.filter((item) => hasTag(item, selectedTag))
 
     switch (sortOrder) {
-      case 'displayOrder': filtered.sort((a, b) => (a.displayOrder ?? 0) - (b.displayOrder ?? 0)); break
-      case 'alpha': filtered.sort((a, b) => {
-        const aName = a.title ?? a.name ?? ''; const bName = b.title ?? b.name ?? ''
-        return aName.localeCompare(bName, language === 'ZH' ? 'zh-CN' : 'en', { sensitivity: 'base' })
-      }); break
-      case 'recent': filtered.sort((a, b) => {
-        const aTime = new Date(a.updatedAt ?? '').getTime(); const bTime = new Date(b.updatedAt ?? '').getTime()
-        return Number.isNaN(bTime - aTime) ? 0 : bTime - aTime
-      }); break
-      default: filtered.sort((a, b) => (a.displayOrder ?? 0) - (b.displayOrder ?? 0)); break
+      case 'displayOrder':
+        filtered.sort((a, b) => (a.displayOrder ?? 0) - (b.displayOrder ?? 0))
+        break
+      case 'alpha':
+        filtered.sort((a, b) => {
+          const aName = a.title ?? a.name ?? ''
+          const bName = b.title ?? b.name ?? ''
+          return aName.localeCompare(bName, language === 'ZH' ? 'zh-CN' : 'en', { sensitivity: 'base' })
+        })
+        break
+      case 'recent':
+        filtered.sort((a, b) => {
+          const aTime = new Date(a.updatedAt ?? '').getTime()
+          const bTime = new Date(b.updatedAt ?? '').getTime()
+          return Number.isNaN(bTime - aTime) ? 0 : bTime - aTime
+        })
+        break
+      default:
+        filtered.sort((a, b) => (a.displayOrder ?? 0) - (b.displayOrder ?? 0))
+        break
     }
     return filtered
   }, [items, language, searchQuery, selectedTag, sortOrder])
 
-  const handleSearchChange = (event: ChangeEvent<HTMLInputElement>) => { setSearchQuery(event.target.value); setCurrentPage(1) }
-  const handleClearSearch = () => { setSearchQuery(''); setCurrentPage(1) }
-  const handleSelectTag = (tag: string | null) => { setSelectedTag(tag); setCurrentPage(1) }
-  const handleTogglePlayer = (item: MediaItem) => { setActiveItem((current) => (current?.id === item.id ? null : item)) }
+  const handleSearchChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(event.target.value)
+    setCurrentPage(1)
+  }
+  const handleClearSearch = () => {
+    setSearchQuery('')
+    setCurrentPage(1)
+  }
+  const handleSelectTag = (tag: string | null) => {
+    setSelectedTag(tag)
+    setCurrentPage(1)
+  }
+  const handleTogglePlayer = (item: MediaItem) => {
+    setActiveItem((current) => (current?.id === item.id ? null : item))
+  }
 
-  useEffect(() => { setShowSubtitle(false) }, [activeItem?.id])
+  useEffect(() => {
+    setShowSubtitle(false)
+  }, [activeItem?.id])
 
   const handlePrevious = () => {
     if (displayItems.length === 0 || !activeItem) return
@@ -91,14 +127,29 @@ export const AudiosPage = () => {
   const handleAudioEnded = () => {
     if (displayItems.length === 0) return
     let nextItem: MediaItem
-    if (displayItems.length === 1) { nextItem = displayItems[0] }
-    else { do { nextItem = displayItems[Math.floor(Math.random() * displayItems.length)] } while (nextItem.id === activeItem?.id) }
+    if (displayItems.length === 1) {
+      nextItem = displayItems[0]
+    } else {
+      do {
+        nextItem = displayItems[Math.floor(Math.random() * displayItems.length)]
+      } while (nextItem.id === activeItem?.id)
+    }
     setActiveItem(nextItem)
   }
 
   return (
     <section className="page audios-page">
-      <Toolbar sectionTags={sectionTags} selectedTag={selectedTag} onSelectTag={handleSelectTag} searchQuery={searchQuery} onSearchChange={handleSearchChange} onClearSearch={handleClearSearch} sortOrder={sortOrder} setSortOrder={setSortOrder} namespace="audios" />
+      <Toolbar
+        sectionTags={sectionTags}
+        selectedTag={selectedTag}
+        onSelectTag={handleSelectTag}
+        searchQuery={searchQuery}
+        onSearchChange={handleSearchChange}
+        onClearSearch={handleClearSearch}
+        sortOrder={sortOrder}
+        setSortOrder={setSortOrder}
+        namespace="audios"
+      />
 
       {loading ? (
         <div className="grid grid--audios">
@@ -106,7 +157,10 @@ export const AudiosPage = () => {
             <div key={item} className="card audio-card audio-card--skeleton" aria-hidden="true">
               <div className="audio-card__content">
                 <div className="audio-card__media-wrapper">
-                  <div className="skeleton skeleton--image" style={{ width: '90px', height: '90px', borderRadius: '50px' }} />
+                  <div
+                    className="skeleton skeleton--image"
+                    style={{ width: '90px', height: '90px', borderRadius: '50px' }}
+                  />
                 </div>
                 <div className="audio-card__info">
                   <div className="skeleton skeleton--line skeleton--line-lg" />
@@ -129,13 +183,34 @@ export const AudiosPage = () => {
         <>
           <div className="grid grid--audios">
             {displayItems.map((item) => (
-              <AudioCard key={item.id} item={item} isActive={activeItem?.id === item.id} onTogglePlayer={handleTogglePlayer} />
+              <AudioCard
+                key={item.id}
+                item={item}
+                isActive={activeItem?.id === item.id}
+                onTogglePlayer={handleTogglePlayer}
+              />
             ))}
           </div>
           {displayItems.length === 0 ? <div className="status status--empty">{t('audios.empty')}</div> : null}
-          <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} totalElements={totalElements} pageSize={pageSize} onPageSizeChange={handlePageSizeChange} />
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+            totalElements={totalElements}
+            pageSize={pageSize}
+            onPageSizeChange={handlePageSizeChange}
+          />
           {activeItem ? <div style={{ height: '160px' }} /> : null}
-          {activeItem ? <AudioPlayer item={activeItem} onPrevious={handlePrevious} onNext={handleNext} onEnded={handleAudioEnded} showSubtitle={showSubtitle} onToggleSubtitle={setShowSubtitle} /> : null}
+          {activeItem ? (
+            <AudioPlayer
+              item={activeItem}
+              onPrevious={handlePrevious}
+              onNext={handleNext}
+              onEnded={handleAudioEnded}
+              showSubtitle={showSubtitle}
+              onToggleSubtitle={setShowSubtitle}
+            />
+          ) : null}
         </>
       ) : null}
     </section>

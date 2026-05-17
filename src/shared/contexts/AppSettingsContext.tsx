@@ -1,10 +1,4 @@
-import {
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-  type ReactNode,
-} from 'react'
+import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react'
 import { getAppSettings } from '../data/openApi'
 import type { AppSetting } from '../data/types'
 import type { LanguageCode } from './UIContext'

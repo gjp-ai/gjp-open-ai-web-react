@@ -100,7 +100,9 @@ export const Pagination = ({
                 <span className="pagination__range">
                   {startItem}-{endItem}
                 </span>
-                <span className="pagination__total">{t('pagination.of')} {totalElements}</span>
+                <span className="pagination__total">
+                  {t('pagination.of')} {totalElements}
+                </span>
               </div>
             )}
 

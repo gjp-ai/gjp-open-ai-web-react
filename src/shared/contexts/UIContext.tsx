@@ -116,7 +116,18 @@ export const UIProvider = ({ children }: { children: ReactNode }) => {
       searchQuery,
       setSearchQuery,
     }),
-    [theme, language, themeColor, searchQuery, setLanguage, setTheme, toggleLanguage, toggleTheme, setThemeColor, setSearchQuery],
+    [
+      theme,
+      language,
+      themeColor,
+      searchQuery,
+      setLanguage,
+      setTheme,
+      toggleLanguage,
+      toggleTheme,
+      setThemeColor,
+      setSearchQuery,
+    ],
   )
 
   return <UIContext.Provider value={value}>{children}</UIContext.Provider>

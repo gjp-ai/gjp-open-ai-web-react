@@ -21,7 +21,10 @@ const matchesSearch = (item: FileItem, query: string) => {
 
 const hasTag = (item: FileItem, tag: string | null) => {
   if (!tag) return true
-  const tagList = (item.tags ?? '').split(',').map((t) => t.trim().toLowerCase()).filter(Boolean)
+  const tagList = (item.tags ?? '')
+    .split(',')
+    .map((t) => t.trim().toLowerCase())
+    .filter(Boolean)
   return tagList.includes(tag.toLowerCase())
 }
 
@@ -40,8 +43,18 @@ export const FilesPage = () => {
     [],
   )
 
-  const { items, loading, error, currentPage, setCurrentPage, totalElements, totalPages, pageSize, handlePageSizeChange, skeletonItems } =
-    usePagedFetch(fetcher, { initialPageSize: 50, skeletonCount: 28 })
+  const {
+    items,
+    loading,
+    error,
+    currentPage,
+    setCurrentPage,
+    totalElements,
+    totalPages,
+    pageSize,
+    handlePageSizeChange,
+    skeletonItems,
+  } = usePagedFetch(fetcher, { initialPageSize: 50, skeletonCount: 28 })
 
   const displayItems = useMemo(() => {
     const trimmedQuery = searchQuery.trim()
@@ -50,24 +63,54 @@ export const FilesPage = () => {
     if (selectedTag) filtered = filtered.filter((item) => hasTag(item, selectedTag))
 
     switch (sortOrder) {
-      case 'displayOrder': filtered.sort((a, b) => (a.displayOrder ?? 0) - (b.displayOrder ?? 0)); break
-      case 'alpha': filtered.sort((a, b) => a.name.localeCompare(b.name, language === 'ZH' ? 'zh-CN' : 'en', { sensitivity: 'base' })); break
-      case 'recent': filtered.sort((a, b) => {
-        const aTime = new Date(a.updatedAt ?? '').getTime(); const bTime = new Date(b.updatedAt ?? '').getTime()
-        return Number.isNaN(bTime - aTime) ? 0 : bTime - aTime
-      }); break
-      default: filtered.sort((a, b) => (a.displayOrder ?? 0) - (b.displayOrder ?? 0)); break
+      case 'displayOrder':
+        filtered.sort((a, b) => (a.displayOrder ?? 0) - (b.displayOrder ?? 0))
+        break
+      case 'alpha':
+        filtered.sort((a, b) =>
+          a.name.localeCompare(b.name, language === 'ZH' ? 'zh-CN' : 'en', { sensitivity: 'base' }),
+        )
+        break
+      case 'recent':
+        filtered.sort((a, b) => {
+          const aTime = new Date(a.updatedAt ?? '').getTime()
+          const bTime = new Date(b.updatedAt ?? '').getTime()
+          return Number.isNaN(bTime - aTime) ? 0 : bTime - aTime
+        })
+        break
+      default:
+        filtered.sort((a, b) => (a.displayOrder ?? 0) - (b.displayOrder ?? 0))
+        break
     }
     return filtered
   }, [items, language, searchQuery, selectedTag, sortOrder])
 
-  const handleSearchChange = (event: ChangeEvent<HTMLInputElement>) => { setSearchQuery(event.target.value); setCurrentPage(1) }
-  const handleClearSearch = () => { setSearchQuery(''); setCurrentPage(1) }
-  const handleSelectTag = (tag: string | null) => { setSelectedTag(tag); setCurrentPage(1) }
+  const handleSearchChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(event.target.value)
+    setCurrentPage(1)
+  }
+  const handleClearSearch = () => {
+    setSearchQuery('')
+    setCurrentPage(1)
+  }
+  const handleSelectTag = (tag: string | null) => {
+    setSelectedTag(tag)
+    setCurrentPage(1)
+  }
 
   return (
     <section className="page">
-      <Toolbar sectionTags={sectionTags} selectedTag={selectedTag} onSelectTag={handleSelectTag} searchQuery={searchQuery} onSearchChange={handleSearchChange} onClearSearch={handleClearSearch} sortOrder={sortOrder} setSortOrder={setSortOrder} namespace="files" />
+      <Toolbar
+        sectionTags={sectionTags}
+        selectedTag={selectedTag}
+        onSelectTag={handleSelectTag}
+        searchQuery={searchQuery}
+        onSearchChange={handleSearchChange}
+        onClearSearch={handleClearSearch}
+        sortOrder={sortOrder}
+        setSortOrder={setSortOrder}
+        namespace="files"
+      />
 
       {loading ? (
         <div className="grid grid--files">
@@ -95,7 +138,14 @@ export const FilesPage = () => {
             ))}
           </div>
           {displayItems.length === 0 ? <div className="status status--empty">{t('files.empty')}</div> : null}
-          <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} totalElements={totalElements} pageSize={pageSize} onPageSizeChange={handlePageSizeChange} />
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+            totalElements={totalElements}
+            pageSize={pageSize}
+            onPageSizeChange={handlePageSizeChange}
+          />
         </>
       ) : null}
     </section>

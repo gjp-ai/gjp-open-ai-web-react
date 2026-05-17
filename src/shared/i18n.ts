@@ -18,8 +18,8 @@ type Translations = {
 }
 
 const baseTranslations: Translations = {
-  'loading': { EN: 'Loading...', ZH: '正在加载...' },
-  'failed_to_load': { EN: 'Failed to load data', ZH: '加载失败' },
+  loading: { EN: 'Loading...', ZH: '正在加载...' },
+  failed_to_load: { EN: 'Failed to load data', ZH: '加载失败' },
 
   // Search
   'search.placeholder': { EN: 'Search sites or tags', ZH: '搜索站点或标签' },
@@ -35,7 +35,10 @@ const baseTranslations: Translations = {
   'notfound.back': { EN: 'Back to home', ZH: '返回首页' },
 
   // Footer
-  'footer.copy': { EN: '© {year} {company} · {appName} · v{version}', ZH: '© {year} {company} · {appName} · 版本 {version}' },
+  'footer.copy': {
+    EN: '© {year} {company} · {appName} · v{version}',
+    ZH: '© {year} {company} · {appName} · 版本 {version}',
+  },
 
   // Common card actions
   'website.visit': { EN: 'Visit', ZH: '访问' },
@@ -64,24 +67,27 @@ const translations: Translations = {
 export const useT = () => {
   const { language } = useUIContext()
 
-  const t = useCallback((key: string, vars?: Record<string, string | number>) => {
-    const entry = translations[key]
-    const lang: Lang = language
-    let text = entry ? entry[lang] ?? entry.EN : key
+  const t = useCallback(
+    (key: string, vars?: Record<string, string | number>) => {
+      const entry = translations[key]
+      const lang: Lang = language
+      let text = entry ? (entry[lang] ?? entry.EN) : key
 
-    if (vars) {
-      for (const k of Object.keys(vars)) {
-        const v = String(vars[k])
-        if (text.replaceAll) {
-          text = text.replaceAll(`{${k}}`, v)
-        } else {
-          text = text.split(`{${k}}`).join(v)
+      if (vars) {
+        for (const k of Object.keys(vars)) {
+          const v = String(vars[k])
+          if (text.replaceAll) {
+            text = text.replaceAll(`{${k}}`, v)
+          } else {
+            text = text.split(`{${k}}`).join(v)
+          }
         }
       }
-    }
 
-    return text
-  }, [language])
+      return text
+    },
+    [language],
+  )
 
   return t
 }

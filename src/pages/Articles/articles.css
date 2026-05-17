@@ -38,7 +38,10 @@
   border-radius: var(--radius-md);
   background: var(--color-bg-secondary);
   border: 1px solid var(--color-border);
-  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
 }
 
 .article-card:hover {
@@ -189,7 +192,7 @@
 
 /* Article Detail Page */
 .article-detail {
-  max-width: 1680px;
+  max-width: 1080px;
   margin: 0 auto;
 }
 
@@ -209,7 +212,10 @@
   border-radius: 50%;
   background: var(--color-bg-secondary);
   color: var(--color-text);
-  transition: background 0.2s, color 0.2s, transform 0.2s;
+  transition:
+    background 0.2s,
+    color 0.2s,
+    transform 0.2s;
   flex-shrink: 0;
 }
 
@@ -246,7 +252,10 @@
   color: var(--color-muted);
   border: 1px solid var(--color-border);
   cursor: pointer;
-  transition: background 0.2s, color 0.2s, border-color 0.2s;
+  transition:
+    background 0.2s,
+    color 0.2s,
+    border-color 0.2s;
 }
 
 .article-detail__cover-toggle:hover {
@@ -399,7 +408,7 @@
 }
 
 /* Inline code (not in pre blocks) */
-.article-detail__body :not(pre)>code {
+.article-detail__body :not(pre) > code {
   padding: 0.2rem 0.4rem;
   background: rgba(175, 184, 193, 0.2);
   border-radius: var(--radius-sm);
@@ -419,7 +428,6 @@
   html:not([data-theme='light']) .article-detail__body pre code {
     color: #c9d1d9 !important;
   }
-
 
   /* GitHub Dark Theme overrides for Highlight.js */
   html:not([data-theme='light']) .article-detail__body .hljs {
@@ -532,7 +540,7 @@
     color: white;
   }
 
-  html:not([data-theme='light']) .article-detail__body :not(pre)>code {
+  html:not([data-theme='light']) .article-detail__body :not(pre) > code {
     background: rgba(110, 118, 129, 0.4);
     color: #ff7b72;
     border-color: rgba(110, 118, 129, 0.5);
@@ -659,7 +667,7 @@
   color: white;
 }
 
-[data-theme='dark'] .article-detail__body :not(pre)>code {
+[data-theme='dark'] .article-detail__body :not(pre) > code {
   background: rgba(110, 118, 129, 0.4);
   color: #ff7b72;
   border-color: rgba(110, 118, 129, 0.5);
@@ -778,7 +786,6 @@
   .article-detail__content {
     padding: 0.1rem 1rem 1rem 1rem;
   }
-
 
   .article-detail__title {
     font-size: 1.5rem;

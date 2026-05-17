@@ -99,18 +99,12 @@ export function usePagedFetch<TItem>(
     }
   }, [currentPage, totalPages])
 
-  const handlePageSizeChange = useCallback(
-    (newPageSize: number) => {
-      setPageSize(newPageSize)
-      setCurrentPage(1)
-    },
-    [],
-  )
+  const handlePageSizeChange = useCallback((newPageSize: number) => {
+    setPageSize(newPageSize)
+    setCurrentPage(1)
+  }, [])
 
-  const skeletonItems = useMemo(
-    () => Array.from({ length: skeletonCount }, (_, index) => index),
-    [skeletonCount],
-  )
+  const skeletonItems = useMemo(() => Array.from({ length: skeletonCount }, (_, index) => index), [skeletonCount])
 
   return {
     items,

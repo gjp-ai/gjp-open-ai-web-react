@@ -46,7 +46,7 @@ const fetchJson = async <TResponse>(input: string, init?: RequestInit): Promise<
   const response = await fetch(input, {
     ...init,
     headers: {
-      'Accept': 'application/json',
+      Accept: 'application/json',
       ...(init?.headers ?? {}),
     },
   })
@@ -59,35 +59,19 @@ const fetchJson = async <TResponse>(input: string, init?: RequestInit): Promise<
   return (await response.json()) as TResponse
 }
 
-export const getAppSettings = () =>
-  fetchJson<ApiListResponse<AppSetting[]>>(createUrl('app-settings'))
+export const getAppSettings = () => fetchJson<ApiListResponse<AppSetting[]>>(createUrl('app-settings'))
 
-export const getWebsites = (
-  page = 0,
-  size = 60,
-  search?: string,
-  tag?: string,
-  lang?: string,
-  signal?: AbortSignal,
-) =>
+export const getWebsites = (page = 0, size = 60, search?: string, tag?: string, lang?: string, signal?: AbortSignal) =>
   // Add optional search and tag query params so callers can request server-side filtering
   fetchJson<ApiPagedResponse<Website>>(createUrl('websites', { page, size, search, tag, lang }), { signal })
 
-export const getQuestions = (
-  page = 0,
-  size = 60,
-  search?: string,
-  tag?: string,
-  lang?: string,
-  signal?: AbortSignal,
-) =>
+export const getQuestions = (page = 0, size = 60, search?: string, tag?: string, lang?: string, signal?: AbortSignal) =>
   fetchJson<ApiPagedResponse<Question>>(createUrl('questions', { page, size, search, tag, lang }), { signal })
 
 export const getArticles = (page = 0, size = 60, lang?: string, signal?: AbortSignal) =>
   fetchJson<ApiPagedResponse<ArticleSummary>>(createUrl('articles', { page, size, lang }), { signal })
 
-export const getArticleById = (id: string) =>
-  fetchJson<ApiListResponse<ArticleDetail>>(createUrl(`articles/${id}`))
+export const getArticleById = (id: string) => fetchJson<ApiListResponse<ArticleDetail>>(createUrl(`articles/${id}`))
 
 export const getImages = (page = 0, size = 60, lang?: string, signal?: AbortSignal) =>
   fetchJson<ApiPagedResponse<MediaItem>>(createUrl('images', { page, size, lang }), { signal })

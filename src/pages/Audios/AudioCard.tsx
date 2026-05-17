@@ -22,7 +22,7 @@ export const AudioCard = ({ item, isActive, onTogglePlayer }: AudioCardProps) =>
             )}
           </div>
           <button
-            className="audio-card__play-button" 
+            className="audio-card__play-button"
             onClick={() => onTogglePlayer(item)}
             aria-label={isActive ? 'Hide player' : 'Show player'}
           >
@@ -31,9 +31,7 @@ export const AudioCard = ({ item, isActive, onTogglePlayer }: AudioCardProps) =>
         </div>
         <div className="audio-card__info">
           <h3 className="audio-card__title">{item.title ?? item.name ?? t('untitled.audio')}</h3>
-          {item.artist && (
-            <div className="audio-card__artist">{item.artist}</div>
-          )}
+          {item.artist && <div className="audio-card__artist">{item.artist}</div>}
         </div>
       </div>
     </article>

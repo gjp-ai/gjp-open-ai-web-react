@@ -200,43 +200,42 @@ export const WebsitesPage = () => {
     skeletonItems,
   } = usePagedFetch(fetcher, { initialPageSize: 500, skeletonCount: 30 })
 
-  const displayItems = useMemo(
-    () => {
-      const trimmedQuery = searchQuery.trim()
-      let filtered = items.filter((item) => item.lang === language)
+  const displayItems = useMemo(() => {
+    const trimmedQuery = searchQuery.trim()
+    let filtered = items.filter((item) => item.lang === language)
 
-      if (trimmedQuery) {
-        filtered = filtered.filter((item) => matchesSearch(item, trimmedQuery))
-      }
+    if (trimmedQuery) {
+      filtered = filtered.filter((item) => matchesSearch(item, trimmedQuery))
+    }
 
-      if (selectedTag) {
-        filtered = filtered.filter((item) => hasTag(item, selectedTag))
-      }
+    if (selectedTag) {
+      filtered = filtered.filter((item) => hasTag(item, selectedTag))
+    }
 
-      // Sort items
-      switch (sortOrder) {
-        case 'displayOrder':
-          filtered.sort((a, b) => (a.displayOrder ?? 0) - (b.displayOrder ?? 0))
-          break
-        case 'alpha':
-          filtered.sort((a, b) => a.name.localeCompare(b.name, language === 'ZH' ? 'zh-CN' : 'en', { sensitivity: 'base' }))
-          break
-        case 'recent':
-          filtered.sort((a, b) => {
-            const aTime = new Date(a.updatedAt ?? '').getTime()
-            const bTime = new Date(b.updatedAt ?? '').getTime()
-            return Number.isNaN(bTime - aTime) ? 0 : bTime - aTime
-          })
-          break
-        default:
-          filtered.sort((a, b) => (a.displayOrder ?? 0) - (b.displayOrder ?? 0))
-          break
-      }
+    // Sort items
+    switch (sortOrder) {
+      case 'displayOrder':
+        filtered.sort((a, b) => (a.displayOrder ?? 0) - (b.displayOrder ?? 0))
+        break
+      case 'alpha':
+        filtered.sort((a, b) =>
+          a.name.localeCompare(b.name, language === 'ZH' ? 'zh-CN' : 'en', { sensitivity: 'base' }),
+        )
+        break
+      case 'recent':
+        filtered.sort((a, b) => {
+          const aTime = new Date(a.updatedAt ?? '').getTime()
+          const bTime = new Date(b.updatedAt ?? '').getTime()
+          return Number.isNaN(bTime - aTime) ? 0 : bTime - aTime
+        })
+        break
+      default:
+        filtered.sort((a, b) => (a.displayOrder ?? 0) - (b.displayOrder ?? 0))
+        break
+    }
 
-      return filtered
-    },
-    [items, language, searchQuery, selectedTag, sortOrder],
-  )
+    return filtered
+  }, [items, language, searchQuery, selectedTag, sortOrder])
 
   const isFilteredView = Boolean(searchQuery.trim() || selectedTag)
 
@@ -291,8 +290,13 @@ export const WebsitesPage = () => {
           <p className="websites-page__subtitle">{t('websites.subtitle')}</p>
         </div>
         <div className="websites-page__count">
-          <span className="websites-page__count-full">{t('websites.result_count', { count: displayItems.length })}</span>
-          <span className="websites-page__count-compact" aria-label={t('websites.result_count', { count: displayItems.length })}>
+          <span className="websites-page__count-full">
+            {t('websites.result_count', { count: displayItems.length })}
+          </span>
+          <span
+            className="websites-page__count-compact"
+            aria-label={t('websites.result_count', { count: displayItems.length })}
+          >
             {displayItems.length}
           </span>
         </div>
@@ -343,7 +347,11 @@ export const WebsitesPage = () => {
                 const isExpanded = expandedLanes.has(lane.tag)
 
                 return (
-                  <section key={lane.tag} className={`websites-lane${isExpanded ? ' websites-lane--expanded' : ''}`} aria-labelledby={lane.id}>
+                  <section
+                    key={lane.tag}
+                    className={`websites-lane${isExpanded ? ' websites-lane--expanded' : ''}`}
+                    aria-labelledby={lane.id}
+                  >
                     <div className="websites-lane__header">
                       <div>
                         <h2 id={lane.id} className="websites-lane__title">
@@ -385,7 +393,9 @@ export const WebsitesPage = () => {
             <div className="websites-results">
               <div className="websites-results__header">
                 <h2 className="websites-results__title">{t('websites.results_title')}</h2>
-                <span className="websites-results__count">{t('websites.result_count', { count: displayItems.length })}</span>
+                <span className="websites-results__count">
+                  {t('websites.result_count', { count: displayItems.length })}
+                </span>
               </div>
               <div className="grid grid--websites">
                 {displayItems.map((item) => (
