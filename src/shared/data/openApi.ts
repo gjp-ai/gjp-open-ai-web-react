@@ -18,6 +18,7 @@ const fallbackBaseUrl = import.meta.env.DEV ? DEV_DEFAULT_BASE_URL : PROD_DEFAUL
 const configuredBaseUrl = (import.meta.env.VITE_OPEN_API_BASE_URL as string | undefined) ?? fallbackBaseUrl
 
 const API_BASE_URL = configuredBaseUrl.endsWith('/') ? configuredBaseUrl : `${configuredBaseUrl}/`
+const OPEN_API_CHANNEL = 'AI'
 
 const buildUrl = (path: string) => {
   const normalizedPath = path.startsWith('/') ? path.slice(1) : path
@@ -27,12 +28,10 @@ const buildUrl = (path: string) => {
 const createUrl = (path: string, searchParams?: Record<string, string | number | undefined>): string => {
   const baseUrl = buildUrl(path)
 
-  if (!searchParams) {
-    return baseUrl
-  }
-
   const params = new URLSearchParams()
-  Object.entries(searchParams).forEach(([key, value]) => {
+  params.set('channel', OPEN_API_CHANNEL)
+
+  Object.entries(searchParams ?? {}).forEach(([key, value]) => {
     if (value !== undefined && value !== null) {
       params.set(key, String(value))
     }

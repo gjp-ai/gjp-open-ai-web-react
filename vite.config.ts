@@ -10,8 +10,8 @@ export default defineConfig({
     cors: true,
     proxy: {
       '/api': {
-        target: 'https://www.ganjianping.com',
-        // target: 'http://localhost:8083',
+        // target: 'https://www.ganjianping.com',
+        target: 'http://localhost:8084',
         changeOrigin: true,
         secure: false,
         configure: (proxy) => {
