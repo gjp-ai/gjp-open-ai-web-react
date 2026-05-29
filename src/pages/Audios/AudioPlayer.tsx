@@ -1,6 +1,8 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import type { MediaItem } from '../../shared/data/types'
 import { useT } from '../../shared/i18n'
+import { sanitizeHtml } from '../../shared/security/sanitizeHtml'
+import { getSafeUrl } from '../../shared/security/safeUrl'
 
 interface AudioPlayerProps {
   item: MediaItem
@@ -24,6 +26,9 @@ export const AudioPlayer = ({
   const [currentTime, setCurrentTime] = useState(0)
   const [duration, setDuration] = useState(0)
   const t = useT()
+  const safeSubtitle = useMemo(() => (item.subtitle ? sanitizeHtml(item.subtitle) : ''), [item.subtitle])
+  const safeAudioUrl = useMemo(() => getSafeUrl(item.url, { allowRelative: false }), [item.url])
+  const safeCaptionsUrl = useMemo(() => getSafeUrl(item.captionsUrl, { allowRelative: false }), [item.captionsUrl])
 
   useEffect(() => {
     if (audioRef.current) {
@@ -88,11 +93,9 @@ export const AudioPlayer = ({
     return `${minutes}:${seconds.toString().padStart(2, '0')}`
   }
 
-  const activeCaptionsUrl = item.captionsUrl ?? undefined
-
   return (
     <div className="audio-card__player-wrapper">
-      {showSubtitle && item.subtitle ? (
+      {showSubtitle && safeSubtitle ? (
         <div className="audio-card__subtitle-container">
           <button
             type="button"
@@ -103,7 +106,7 @@ export const AudioPlayer = ({
           >
             ✕
           </button>
-          <div className="audio-card__subtitle-content" dangerouslySetInnerHTML={{ __html: item.subtitle }} />
+          <div className="audio-card__subtitle-content" dangerouslySetInnerHTML={{ __html: safeSubtitle }} />
         </div>
       ) : null}
 
@@ -171,7 +174,7 @@ export const AudioPlayer = ({
         </div>
 
         <div className="audio-card__player-extras">
-          {item.subtitle ? (
+          {safeSubtitle ? (
             <button
               type="button"
               className="audio-card__control-button"
@@ -191,7 +194,7 @@ export const AudioPlayer = ({
       <audio
         key={item.id}
         ref={audioRef}
-        src={item.url}
+        src={safeAudioUrl}
         onTimeUpdate={handleTimeUpdate}
         onLoadedMetadata={handleLoadedMetadata}
         onEnded={onEnded}
@@ -199,7 +202,7 @@ export const AudioPlayer = ({
         onPause={() => setIsPlaying(false)}
         preload="auto"
       >
-        {activeCaptionsUrl ? <track kind="captions" srcLang="en" src={activeCaptionsUrl} /> : null}
+        {safeCaptionsUrl ? <track kind="captions" srcLang="en" src={safeCaptionsUrl} /> : null}
       </audio>
     </div>
   )

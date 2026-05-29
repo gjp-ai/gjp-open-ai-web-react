@@ -1,5 +1,6 @@
 import type { MediaItem } from '../../shared/data/types'
 import { useT } from '../../shared/i18n'
+import { getSafeUrl } from '../../shared/security/safeUrl'
 
 interface ImageCardProps {
   item: MediaItem
@@ -8,12 +9,12 @@ interface ImageCardProps {
 
 export const ImageCard = ({ item, onClick }: ImageCardProps) => {
   const t = useT()
-  const imageSource = item.thumbnailUrl ?? item.url
+  const imageSource = getSafeUrl(item.thumbnailUrl ?? item.url)
   const altText = item.altText ?? item.name ?? t('placeholder.image')
 
   const cardContent = (
     <figure className="card image-card">
-      <img src={imageSource} alt={altText} loading="lazy" className="image-card__image" />
+      {imageSource ? <img src={imageSource} alt={altText} loading="lazy" className="image-card__image" /> : null}
       <figcaption className="image-card__overlay">
         <div className="image-card__title">{item.name ?? item.title ?? 'Untitled image'}</div>
       </figcaption>

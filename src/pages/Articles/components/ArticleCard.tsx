@@ -1,11 +1,13 @@
 import { Link } from 'react-router-dom'
 import type { ArticleSummary } from '../../../shared/data/types'
+import { getSafeUrl } from '../../../shared/security/safeUrl'
 
 interface ArticleCardProps {
   article: ArticleSummary
 }
 
 export const ArticleCard = ({ article }: ArticleCardProps) => {
+  const safeCoverImageUrl = getSafeUrl(article.coverImageUrl)
   const tags = article.tags
     ? article.tags
         .split(',')
@@ -17,8 +19,8 @@ export const ArticleCard = ({ article }: ArticleCardProps) => {
     <article className="card article-card">
       <Link to={`/articles/${article.id}`} className="article-card__link">
         <div className="article-card__media">
-          {article.coverImageUrl ? (
-            <img src={article.coverImageUrl} alt={article.title} loading="lazy" />
+          {safeCoverImageUrl ? (
+            <img src={safeCoverImageUrl} alt={article.title} loading="lazy" />
           ) : (
             <div className="article-card__media-placeholder" aria-hidden="true">
               <svg

@@ -1,11 +1,37 @@
-import { useEffect, useState } from 'react'
-import hljs from 'highlight.js'
+import { useEffect, useMemo, useState } from 'react'
 import 'highlight.js/styles/github.css'
 import { useParams, Link } from 'react-router-dom'
 import type { ArticleDetail } from '../../shared/data/types'
+import { hljs } from '../../shared/highlight/highlight'
 import { useT } from '../../shared/i18n'
+import { sanitizeHtml } from '../../shared/security/sanitizeHtml'
+import { getSafeUrl, getSafeYoutubeEmbedUrl } from '../../shared/security/safeUrl'
 import { getArticleById } from './articlesApi'
 import './articles.css'
+
+const createCopyIcon = () => {
+  const icon = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
+  icon.classList.add('copy-icon')
+  icon.setAttribute('width', '16')
+  icon.setAttribute('height', '16')
+  icon.setAttribute('viewBox', '0 0 16 16')
+  icon.setAttribute('fill', 'none')
+  icon.setAttribute('stroke', 'currentColor')
+  icon.setAttribute('stroke-width', '2')
+
+  const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect')
+  rect.setAttribute('x', '4')
+  rect.setAttribute('y', '4')
+  rect.setAttribute('width', '8')
+  rect.setAttribute('height', '10')
+  rect.setAttribute('rx', '1')
+
+  const path = document.createElementNS('http://www.w3.org/2000/svg', 'path')
+  path.setAttribute('d', 'M8 4V2a1 1 0 0 1 1-1h5a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1h-2')
+
+  icon.append(rect, path)
+  return icon
+}
 
 export const ArticleDetailPage = () => {
   const { id } = useParams<{ id: string }>()
@@ -16,6 +42,12 @@ export const ArticleDetailPage = () => {
   const t = useT()
   const invalidIdMessage = t('articles.invalid_id')
   const failedToLoadMessage = t('failed_to_load')
+  const safeArticleContent = useMemo(() => (article ? sanitizeHtml(article.content) : ''), [article])
+  const safeCoverImageUrl = useMemo(() => getSafeUrl(article?.coverImageUrl), [article?.coverImageUrl])
+  const safeOriginalUrl = useMemo(
+    () => getSafeUrl(article?.originalUrl, { allowRelative: false }),
+    [article?.originalUrl],
+  )
 
   useEffect(() => {
     const fetchArticle = async () => {
@@ -76,15 +108,18 @@ export const ArticleDetailPage = () => {
             // Create copy button
             const copyButton = document.createElement('button')
             copyButton.className = 'code-copy-button'
-            copyButton.innerHTML = `
-              <svg class="copy-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
-                <rect x="4" y="4" width="8" height="10" rx="1"/>
-                <path d="M8 4V2a1 1 0 0 1 1-1h5a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1h-2"/>
-              </svg>
-              <span class="copy-text">Copy</span>
-              <span class="copied-text" style="display: none;">Copied!</span>
-            `
             copyButton.setAttribute('aria-label', 'Copy code')
+
+            const copyText = document.createElement('span')
+            copyText.className = 'copy-text'
+            copyText.textContent = 'Copy'
+
+            const copiedText = document.createElement('span')
+            copiedText.className = 'copied-text'
+            copiedText.style.display = 'none'
+            copiedText.textContent = 'Copied!'
+
+            copyButton.append(createCopyIcon(), copyText, copiedText)
 
             // Add click handler
             copyButton.addEventListener('click', async () => {
@@ -94,19 +129,15 @@ export const ArticleDetailPage = () => {
                   await navigator.clipboard.writeText(codeElement.textContent || '')
 
                   // Show "Copied!" feedback
-                  const copyText = copyButton.querySelector('.copy-text')
-                  const copiedText = copyButton.querySelector('.copied-text')
-                  if (copyText && copiedText) {
-                    copyText.setAttribute('style', 'display: none;')
-                    copiedText.setAttribute('style', 'display: inline;')
-                    copyButton.classList.add('copied')
+                  copyText.style.display = 'none'
+                  copiedText.style.display = 'inline'
+                  copyButton.classList.add('copied')
 
-                    setTimeout(() => {
-                      copyText.setAttribute('style', 'display: inline;')
-                      copiedText.setAttribute('style', 'display: none;')
-                      copyButton.classList.remove('copied')
-                    }, 2000)
-                  }
+                  setTimeout(() => {
+                    copyText.style.display = 'inline'
+                    copiedText.style.display = 'none'
+                    copyButton.classList.remove('copied')
+                  }, 2000)
                 } catch (err) {
                   console.error('Failed to copy code:', err)
                 }
@@ -128,7 +159,7 @@ export const ArticleDetailPage = () => {
       // Process video embeds: convert <div> with src to <iframe>
       const videoEmbeds = document.querySelectorAll('.article-detail__body .video-embed[data-provider="youtube"]')
       videoEmbeds.forEach((div) => {
-        const src = div.getAttribute('src')
+        const src = getSafeYoutubeEmbedUrl(div.getAttribute('src'))
         const width = div.getAttribute('width') || '600'
         const height = div.getAttribute('height') || '400'
 
@@ -138,19 +169,21 @@ export const ArticleDetailPage = () => {
           iframe.width = width
           iframe.height = height
           iframe.className = div.className
-          iframe.style.cssText = div.style.cssText
           iframe.setAttribute('frameborder', '0')
           iframe.setAttribute(
             'allow',
             'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture',
           )
           iframe.setAttribute('allowfullscreen', 'true')
+          iframe.setAttribute('loading', 'lazy')
+          iframe.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin')
+          iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-presentation')
 
           div.parentNode?.replaceChild(iframe, div)
         }
       })
     })
-  }, [article])
+  }, [article, safeArticleContent])
 
   if (loading) {
     return (
@@ -230,7 +263,7 @@ export const ArticleDetailPage = () => {
           </svg>
         </Link>
         <h1 className="article-detail__title">{article.title}</h1>
-        {article.coverImageUrl ? (
+        {safeCoverImageUrl ? (
           <button
             className="article-detail__cover-toggle"
             onClick={() => setCoverVisible((v) => !v)}
@@ -271,18 +304,18 @@ export const ArticleDetailPage = () => {
         ) : null}
       </div>
 
-      {article.coverImageUrl && coverVisible ? (
+      {safeCoverImageUrl && coverVisible ? (
         <div className="article-detail__hero">
-          <img src={article.coverImageUrl} alt={article.title} className="article-detail__hero-img" />
+          <img src={safeCoverImageUrl} alt={article.title} className="article-detail__hero-img" />
         </div>
       ) : null}
 
       <article className="article-detail__content">
-        <div className="article-detail__body" dangerouslySetInnerHTML={{ __html: article.content }} />
+        <div className="article-detail__body" dangerouslySetInnerHTML={{ __html: safeArticleContent }} />
 
-        {article.originalUrl ? (
+        {safeOriginalUrl ? (
           <div className="article-detail__actions">
-            <a href={article.originalUrl} target="_blank" rel="noopener noreferrer" className="button button--primary">
+            <a href={safeOriginalUrl} target="_blank" rel="noopener noreferrer" className="button button--primary">
               {t('articles.view_original')}
             </a>
           </div>

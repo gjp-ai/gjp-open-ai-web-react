@@ -6,8 +6,8 @@ export default defineConfig({
   plugins: [react()],
   server: {
     port: 3001,
-    host: true,
-    cors: true,
+    host: 'localhost',
+    cors: false,
     proxy: {
       '/api': {
         // target: 'https://www.ganjianping.com',

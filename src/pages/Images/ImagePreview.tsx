@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import type { MediaItem } from '../../shared/data/types'
 import { useT } from '../../shared/i18n'
+import { getSafeUrl } from '../../shared/security/safeUrl'
 
 interface ImagePreviewProps {
   image: MediaItem
@@ -15,6 +16,7 @@ export const ImagePreview = ({ image, allImages, onClose, onNext, onPrevious }: 
   const currentIndex = allImages.findIndex((img) => img.id === image.id)
   const hasPrevious = currentIndex > 0
   const hasNext = currentIndex < allImages.length - 1
+  const safeImageUrl = getSafeUrl(image.url)
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -55,11 +57,13 @@ export const ImagePreview = ({ image, allImages, onClose, onNext, onPrevious }: 
         </button>
 
         <div className="image-preview__content">
-          <img
-            src={image.url}
-            alt={image.altText ?? image.name ?? image.title ?? ''}
-            className="image-preview__image"
-          />
+          {safeImageUrl ? (
+            <img
+              src={safeImageUrl}
+              alt={image.altText ?? image.name ?? image.title ?? ''}
+              className="image-preview__image"
+            />
+          ) : null}
         </div>
 
         <div className="image-preview__controls">

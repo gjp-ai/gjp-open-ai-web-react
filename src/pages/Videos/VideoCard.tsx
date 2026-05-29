@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import type { MediaItem } from '../../shared/data/types'
 import { useT } from '../../shared/i18n'
+import { getSafeUrl } from '../../shared/security/safeUrl'
 
 interface VideoCardProps {
   item: MediaItem
@@ -9,9 +10,11 @@ interface VideoCardProps {
 export const VideoCard = ({ item }: VideoCardProps) => {
   const t = useT()
   const [isPlaying, setIsPlaying] = useState(false)
-  const hasVideoSource = Boolean(item.url)
+  const safeVideoUrl = getSafeUrl(item.url, { allowRelative: false })
+  const safeCaptionsUrl = getSafeUrl(item.captionsUrl, { allowRelative: false })
+  const hasVideoSource = Boolean(safeVideoUrl)
   const title = item.title ?? item.name ?? t('untitled.video')
-  const posterImage = item.coverImageUrl ?? item.thumbnailUrl ?? undefined
+  const posterImage = getSafeUrl(item.coverImageUrl ?? item.thumbnailUrl)
   const tags = (item.tags ?? '')
     .split(',')
     .map((tag) => tag.trim())
@@ -23,8 +26,8 @@ export const VideoCard = ({ item }: VideoCardProps) => {
         <div className={hasVideoSource ? 'video-card__media' : 'video-card__media video-card__media--unavailable'}>
           {isPlaying && hasVideoSource ? (
             <video className="video-card__player" controls autoPlay playsInline poster={posterImage}>
-              <source src={item.url} />
-              {item.captionsUrl ? <track kind="captions" src={item.captionsUrl} /> : null}
+              <source src={safeVideoUrl} />
+              {safeCaptionsUrl ? <track kind="captions" src={safeCaptionsUrl} /> : null}
             </video>
           ) : posterImage ? (
             <>
@@ -74,7 +77,7 @@ export const VideoCard = ({ item }: VideoCardProps) => {
           {hasVideoSource ? (
             <a
               className="video-card__download-button"
-              href={item.url}
+              href={safeVideoUrl}
               download
               aria-label={`${t('videos.download')}: ${title}`}
             >

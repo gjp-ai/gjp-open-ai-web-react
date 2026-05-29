@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import type { Website } from '../../../shared/data/types'
+import { getSafeUrl } from '../../../shared/security/safeUrl'
 
 interface WebsiteCardProps {
   website: Website
@@ -26,14 +27,16 @@ export const WebsiteCard = ({ website }: WebsiteCardProps) => {
   const [imageError, setImageError] = useState(false)
 
   const description = website.description?.trim()
-  const hasLogo = website.logoUrl && !imageError
+  const safeLogoUrl = getSafeUrl(website.logoUrl)
+  const safeWebsiteUrl = getSafeUrl(website.url, { allowRelative: false })
+  const hasLogo = safeLogoUrl && !imageError
 
   const cardBody = (
     <div className="website-card__layout">
       <div className="website-card__main">
         <div className="website-card__logo" aria-hidden={!hasLogo}>
           {hasLogo ? (
-            <img src={website.logoUrl} alt={website.name} loading="lazy" onError={() => setImageError(true)} />
+            <img src={safeLogoUrl} alt={website.name} loading="lazy" onError={() => setImageError(true)} />
           ) : (
             <DefaultLogoIcon />
           )}
@@ -54,8 +57,8 @@ export const WebsiteCard = ({ website }: WebsiteCardProps) => {
 
   return (
     <article className="card website-card" aria-label={website.name}>
-      {website.url ? (
-        <a className="website-card__link" href={website.url} target="_blank" rel="noopener noreferrer">
+      {safeWebsiteUrl ? (
+        <a className="website-card__link" href={safeWebsiteUrl} target="_blank" rel="noopener noreferrer">
           {cardBody}
         </a>
       ) : (

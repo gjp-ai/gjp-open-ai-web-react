@@ -1,5 +1,6 @@
 import type { MediaItem } from '../../shared/data/types'
 import { useT } from '../../shared/i18n'
+import { getSafeUrl } from '../../shared/security/safeUrl'
 
 interface AudioCardProps {
   item: MediaItem
@@ -9,14 +10,15 @@ interface AudioCardProps {
 
 export const AudioCard = ({ item, isActive, onTogglePlayer }: AudioCardProps) => {
   const t = useT()
+  const safeCoverImageUrl = getSafeUrl(item.coverImageUrl)
 
   return (
     <article className="card audio-card">
       <div className="audio-card__content">
         <div className="audio-card__media-wrapper">
           <div className="audio-card__media">
-            {item.coverImageUrl ? (
-              <img src={item.coverImageUrl} alt={item.title ?? t('untitled.audio')} loading="lazy" />
+            {safeCoverImageUrl ? (
+              <img src={safeCoverImageUrl} alt={item.title ?? t('untitled.audio')} loading="lazy" />
             ) : (
               <div className="audio-card__placeholder">{t('placeholder.audio')}</div>
             )}
