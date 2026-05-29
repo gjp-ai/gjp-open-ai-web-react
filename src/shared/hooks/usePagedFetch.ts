@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import type { ApiPagedResponse } from '../data/types'
-import { useUIContext } from '../contexts/useUIContext'
+import { useUIContext } from '../contexts/UIContext'
 import { useT } from '../i18n'
 
 interface UsePagedFetchOptions {

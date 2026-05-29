@@ -1,10 +1,10 @@
 import { type ChangeEvent, useCallback, useMemo, useState } from 'react'
-import { getImages } from '../../shared/data/openApi'
 import type { MediaItem } from '../../shared/data/types'
-import { useUIContext } from '../../shared/contexts/useUIContext'
+import { useUIContext } from '../../shared/contexts/UIContext'
 import { useT } from '../../shared/i18n'
-import { useAppSettings } from '../../shared/contexts/useAppSettings'
+import { useAppSettings } from '../../shared/contexts/AppSettings'
 import { usePagedFetch } from '../../shared/hooks/usePagedFetch'
+import { getImages } from './imagesApi'
 import { ImageCard } from './ImageCard'
 import { ImagePreview } from './ImagePreview'
 import { Pagination } from '../../shared/ui/Pagination'
@@ -39,7 +39,8 @@ const hasTag = (item: MediaItem, tag: string | null) => {
 type SortOrder = 'displayOrder' | 'alpha' | 'recent'
 
 export const ImagesPage = () => {
-  const { language, searchQuery, setSearchQuery } = useUIContext()
+  const { language } = useUIContext()
+  const [searchQuery, setSearchQuery] = useState('')
   const { getTags } = useAppSettings()
   const [selectedTag, setSelectedTag] = useState<string | null>(null)
   const [sortOrder, setSortOrder] = useState<SortOrder>('displayOrder')

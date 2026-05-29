@@ -1,83 +1,83 @@
-# React + TypeScript + Vite
+# GJP Open AI Web React
 
-## Project Quality Harness
+React, TypeScript, and Vite frontend for the GJP Open AI public content site.
 
-Use the local engineering harness before committing changes:
+## Setup
 
 ```sh
-npm run check
+npm install
+npm run dev
 ```
 
-See [ENGINEERING.md](./ENGINEERING.md) for the code generation, review, and maintainability checklist.
+The dev server runs with the Vite config in `vite.config.ts`. Development API
+requests use the relative `/api/open/` base URL so the Vite proxy can avoid
+browser CORS issues.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Environment
 
-Currently, two official plugins are available:
+Open API runtime values are maintained in Vite env files:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```env
+VITE_OPEN_API_BASE_URL=/api/open/
+VITE_OPEN_API_CHANNEL=AI
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Production uses:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```env
+VITE_OPEN_API_BASE_URL=https://www.ganjianping.com/api/open/
+VITE_OPEN_API_CHANNEL=AI
 ```
+
+The app reads these values through `src/shared/data/openApiConfig.ts`.
+
+## Scripts
+
+```sh
+npm run dev           # Start local Vite dev server
+npm run build         # Type-check and build production assets
+npm run lint          # Run ESLint
+npm run format        # Format source files with Prettier
+npm run format:check  # Check Prettier formatting
+npm run check         # Run lint, format:check, and build
+npm run preview       # Preview production build
+```
+
+Run `npm run check` before committing UI, data, routing, or infrastructure
+changes.
+
+## Project Structure
+
+```text
+src/
+├── app/                    # App shell, routes, layouts
+├── pages/                  # Feature-sliced page modules
+│   └── Xxx/
+│       ├── XxxPage.tsx
+│       ├── xxxApi.ts
+│       ├── xxx.css
+│       ├── i18n.ts
+│       └── components/
+├── shared/
+│   ├── components/         # App-aware composed components
+│   ├── contexts/           # Context feature folders
+│   ├── data/               # Open API client/config and shared types
+│   ├── hooks/              # Shared hooks
+│   ├── i18n.ts             # Translation registry and useT()
+│   └── ui/                 # Primitive reusable controls
+└── index.css               # Global tokens and base styles
+```
+
+## Architecture Notes
+
+- `shared/data/openApi.ts` contains only reusable Open API client helpers.
+- Page-owned endpoint wrappers live beside pages as `src/pages/Xxx/xxxApi.ts`.
+- Context features such as `AppSettings` and `UIContext` live in folders with an
+  `index.ts` public entrypoint.
+- `shared/ui` contains primitive controls; `shared/components` contains
+  app-aware composed components such as `SiteHeader`, `Footer`, and `Toolbar`.
+- Visible text belongs in the i18n registry. Config files should reference
+  translation keys instead of inline bilingual labels.
+- Route-specific search text is owned by the page, not by global UI context.
+
+For detailed contribution and code-generation rules, see `AGENTS.md`.

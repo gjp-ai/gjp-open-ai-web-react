@@ -1,11 +1,11 @@
 import { type ChangeEvent, useCallback, useEffect, useMemo, useState } from 'react'
-import { getQuestions } from '../../shared/data/openApi'
 import type { Question } from '../../shared/data/types'
-import { useUIContext } from '../../shared/contexts/useUIContext'
-import { useAppSettings } from '../../shared/contexts/useAppSettings'
+import { useUIContext } from '../../shared/contexts/UIContext'
+import { useAppSettings } from '../../shared/contexts/AppSettings'
 import { useT } from '../../shared/i18n'
 import { usePagedFetch } from '../../shared/hooks/usePagedFetch'
 import { Pagination } from '../../shared/ui/Pagination'
+import { getQuestions } from './questionsApi'
 import { QuestionCard } from './components/QuestionCard'
 import { QuestionAnswer } from './components/QuestionAnswer'
 import { Toolbar } from '../../shared/components/Toolbar/Toolbar'
@@ -58,7 +58,8 @@ const getUniqueTags = (tags: string | undefined) => {
 }
 
 export const QuestionsPage = () => {
-  const { language, searchQuery, setSearchQuery } = useUIContext()
+  const { language } = useUIContext()
+  const [searchQuery, setSearchQuery] = useState('')
   const { getTags } = useAppSettings()
   const [selectedTag, setSelectedTag] = useState<string | null>(null)
   const [sortOrder, setSortOrder] = useState<SortOrder>('displayOrder')

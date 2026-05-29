@@ -1,5 +1,5 @@
 import { useCallback } from 'react'
-import { useUIContext } from './contexts/useUIContext'
+import { useUIContext } from './contexts/UIContext'
 import websitesTranslations from '../pages/Websites/i18n'
 import questionsTranslations from '../pages/Questions/i18n'
 import articlesTranslations from '../pages/Articles/i18n'
@@ -23,6 +23,15 @@ const baseTranslations: Translations = {
 
   // Search
   'search.placeholder': { EN: 'Search sites or tags', ZH: '搜索站点或标签' },
+
+  // Navigation
+  'nav.websites': { EN: 'Websites', ZH: '网站' },
+  'nav.questions': { EN: 'Q&A', ZH: '问答' },
+  'nav.articles': { EN: 'Articles', ZH: '文章' },
+  'nav.images': { EN: 'Images', ZH: '图片' },
+  'nav.audios': { EN: 'Audios', ZH: '音频' },
+  'nav.videos': { EN: 'Videos', ZH: '视频' },
+  'nav.files': { EN: 'Files', ZH: '文件' },
 
   // Toggles
   'toggle.theme.light': { EN: 'Switch to light', ZH: '切换到日间' },

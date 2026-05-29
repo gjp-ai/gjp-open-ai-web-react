@@ -1,6 +1,6 @@
 import { Suspense } from 'react'
 import { RouterProvider } from 'react-router-dom'
-import { AppSettingsProvider } from '../shared/contexts/AppSettingsContext'
+import { AppSettingsProvider } from '../shared/contexts/AppSettings'
 import { UIProvider } from '../shared/contexts/UIContext'
 import { ErrorBoundary } from '../shared/components/ErrorBoundary'
 import { router } from './routes'

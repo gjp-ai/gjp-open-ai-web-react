@@ -1,10 +1,10 @@
 import { type ChangeEvent, useCallback, useMemo, useState } from 'react'
-import { getArticles } from '../../shared/data/openApi'
 import type { ArticleSummary } from '../../shared/data/types'
-import { useUIContext } from '../../shared/contexts/useUIContext'
+import { useUIContext } from '../../shared/contexts/UIContext'
 import { useT } from '../../shared/i18n'
-import { useAppSettings } from '../../shared/contexts/useAppSettings'
+import { useAppSettings } from '../../shared/contexts/AppSettings'
 import { usePagedFetch } from '../../shared/hooks/usePagedFetch'
+import { getArticles } from './articlesApi'
 import { ArticleCard } from './components/ArticleCard'
 import { Toolbar } from '../../shared/components/Toolbar/Toolbar'
 import { Pagination } from '../../shared/ui/Pagination'
@@ -38,7 +38,8 @@ const hasTag = (article: ArticleSummary, tag: string | null) => {
 type SortOrder = 'displayOrder' | 'alpha' | 'recent'
 
 export const ArticlesPage = () => {
-  const { language, searchQuery, setSearchQuery } = useUIContext()
+  const { language } = useUIContext()
+  const [searchQuery, setSearchQuery] = useState('')
   const { getTags } = useAppSettings()
   const [selectedTag, setSelectedTag] = useState<string | null>(null)
   const [sortOrder, setSortOrder] = useState<SortOrder>('displayOrder')

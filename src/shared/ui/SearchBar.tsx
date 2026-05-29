@@ -1,21 +1,24 @@
 import type { ChangeEvent } from 'react'
-import { useUIContext } from '../contexts/useUIContext'
 import { useT } from '../i18n'
 
-export const SearchBar = () => {
-  const { searchQuery, setSearchQuery } = useUIContext()
+interface SearchBarProps {
+  value: string
+  onChange: (value: string) => void
+}
+
+export const SearchBar = ({ value, onChange }: SearchBarProps) => {
   const t = useT()
   const placeholder = t('search.placeholder')
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(event.target.value)
+    onChange(event.target.value)
   }
 
   return (
     <input
       className="search-input"
       type="search"
-      value={searchQuery}
+      value={value}
       onChange={handleChange}
       placeholder={placeholder}
       aria-label={placeholder}

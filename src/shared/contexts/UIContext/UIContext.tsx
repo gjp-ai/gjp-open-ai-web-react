@@ -1,8 +1,6 @@
 import { useEffect, useMemo, useState, useCallback, type ReactNode } from 'react'
 import { UIContext, type LanguageCode, type ThemeColor, type ThemeMode, type UIContextValue } from './uiContextCore'
 
-export type { LanguageCode, ThemeColor, ThemeMode } from './uiContextCore'
-
 const THEME_STORAGE_KEY = 'gjp.theme'
 const LANGUAGE_STORAGE_KEY = 'gjp.language'
 const THEME_COLOR_STORAGE_KEY = 'gjp.themeColor'
@@ -51,7 +49,6 @@ export const UIProvider = ({ children }: { children: ReactNode }) => {
   const [theme, setThemeState] = useState<ThemeMode>(() => getPreferredTheme())
   const [language, setLanguageState] = useState<LanguageCode>(() => getPreferredLanguage())
   const [themeColor, setThemeColorState] = useState<ThemeColor>(() => getPreferredThemeColor())
-  const [searchQuery, setSearchQuery] = useState('')
 
   useEffect(() => {
     if (typeof window === 'undefined') {
@@ -113,21 +110,8 @@ export const UIProvider = ({ children }: { children: ReactNode }) => {
       toggleLanguage,
       themeColor,
       setThemeColor,
-      searchQuery,
-      setSearchQuery,
     }),
-    [
-      theme,
-      language,
-      themeColor,
-      searchQuery,
-      setLanguage,
-      setTheme,
-      toggleLanguage,
-      toggleTheme,
-      setThemeColor,
-      setSearchQuery,
-    ],
+    [theme, language, themeColor, setLanguage, setTheme, toggleLanguage, toggleTheme, setThemeColor],
   )
 
   return <UIContext.Provider value={value}>{children}</UIContext.Provider>

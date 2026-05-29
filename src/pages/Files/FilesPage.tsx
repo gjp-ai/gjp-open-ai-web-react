@@ -1,10 +1,10 @@
 import { type ChangeEvent, useCallback, useMemo, useState } from 'react'
-import { getFiles } from '../../shared/data/openApi'
 import type { FileItem } from '../../shared/data/types'
-import { useUIContext } from '../../shared/contexts/useUIContext'
+import { useUIContext } from '../../shared/contexts/UIContext'
 import { useT } from '../../shared/i18n'
-import { useAppSettings } from '../../shared/contexts/useAppSettings'
+import { useAppSettings } from '../../shared/contexts/AppSettings'
 import { usePagedFetch } from '../../shared/hooks/usePagedFetch'
+import { getFiles } from './filesApi'
 import { FileCard } from './FileCard'
 import { Pagination } from '../../shared/ui/Pagination'
 import { Toolbar } from '../../shared/components/Toolbar/Toolbar'
@@ -31,7 +31,8 @@ const hasTag = (item: FileItem, tag: string | null) => {
 type SortOrder = 'displayOrder' | 'alpha' | 'recent'
 
 export const FilesPage = () => {
-  const { language, searchQuery, setSearchQuery } = useUIContext()
+  const { language } = useUIContext()
+  const [searchQuery, setSearchQuery] = useState('')
   const { getTags } = useAppSettings()
   const [selectedTag, setSelectedTag] = useState<string | null>(null)
   const [sortOrder, setSortOrder] = useState<SortOrder>('displayOrder')

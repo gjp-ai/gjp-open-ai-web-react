@@ -1,6 +1,6 @@
 import { createContext } from 'react'
-import type { AppSetting } from '../data/types'
-import type { LanguageCode } from './uiContextCore'
+import type { AppSetting } from '../../data/types'
+import type { LanguageCode } from '../UIContext'
 
 export interface AppSettingsContextValue {
   settings: AppSetting[]

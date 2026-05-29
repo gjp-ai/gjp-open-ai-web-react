@@ -1,31 +1,16 @@
-import type {
-  ApiListResponse,
-  ApiPagedResponse,
-  AppSetting,
-  ArticleDetail,
-  ArticleSummary,
-  FileItem,
-  MediaItem,
-  Question,
-  Website,
-} from './types'
+import { OPEN_API_BASE_URL, OPEN_API_CHANNEL } from './openApiConfig'
 
-const DEV_DEFAULT_BASE_URL = '/api/open/'
-const PROD_DEFAULT_BASE_URL = 'https://www.ganjianping.com/api/open/'
-
-const fallbackBaseUrl = import.meta.env.DEV ? DEV_DEFAULT_BASE_URL : PROD_DEFAULT_BASE_URL
-
-const configuredBaseUrl = (import.meta.env.VITE_OPEN_API_BASE_URL as string | undefined) ?? fallbackBaseUrl
-
-const API_BASE_URL = configuredBaseUrl.endsWith('/') ? configuredBaseUrl : `${configuredBaseUrl}/`
-const OPEN_API_CHANNEL = 'AI'
+const API_BASE_URL = OPEN_API_BASE_URL.endsWith('/') ? OPEN_API_BASE_URL : `${OPEN_API_BASE_URL}/`
 
 const buildUrl = (path: string) => {
   const normalizedPath = path.startsWith('/') ? path.slice(1) : path
   return `${API_BASE_URL}${normalizedPath}`
 }
 
-const createUrl = (path: string, searchParams?: Record<string, string | number | undefined>): string => {
+export const createOpenApiUrl = (
+  path: string,
+  searchParams?: Record<string, string | number | undefined | null>,
+): string => {
   const baseUrl = buildUrl(path)
 
   const params = new URLSearchParams()
@@ -41,7 +26,7 @@ const createUrl = (path: string, searchParams?: Record<string, string | number |
   return queryString ? `${baseUrl}?${queryString}` : baseUrl
 }
 
-const fetchJson = async <TResponse>(input: string, init?: RequestInit): Promise<TResponse> => {
+export const fetchOpenApiJson = async <TResponse>(input: string, init?: RequestInit): Promise<TResponse> => {
   const response = await fetch(input, {
     ...init,
     headers: {
@@ -57,29 +42,3 @@ const fetchJson = async <TResponse>(input: string, init?: RequestInit): Promise<
 
   return (await response.json()) as TResponse
 }
-
-export const getAppSettings = () => fetchJson<ApiListResponse<AppSetting[]>>(createUrl('app-settings'))
-
-export const getWebsites = (page = 0, size = 60, search?: string, tag?: string, lang?: string, signal?: AbortSignal) =>
-  // Add optional search and tag query params so callers can request server-side filtering
-  fetchJson<ApiPagedResponse<Website>>(createUrl('websites', { page, size, search, tag, lang }), { signal })
-
-export const getQuestions = (page = 0, size = 60, search?: string, tag?: string, lang?: string, signal?: AbortSignal) =>
-  fetchJson<ApiPagedResponse<Question>>(createUrl('questions', { page, size, search, tag, lang }), { signal })
-
-export const getArticles = (page = 0, size = 60, lang?: string, signal?: AbortSignal) =>
-  fetchJson<ApiPagedResponse<ArticleSummary>>(createUrl('articles', { page, size, lang }), { signal })
-
-export const getArticleById = (id: string) => fetchJson<ApiListResponse<ArticleDetail>>(createUrl(`articles/${id}`))
-
-export const getImages = (page = 0, size = 60, lang?: string, signal?: AbortSignal) =>
-  fetchJson<ApiPagedResponse<MediaItem>>(createUrl('images', { page, size, lang }), { signal })
-
-export const getVideos = (page = 0, size = 60, lang?: string, signal?: AbortSignal) =>
-  fetchJson<ApiPagedResponse<MediaItem>>(createUrl('videos', { page, size, lang }), { signal })
-
-export const getAudios = (page = 0, size = 60, lang?: string, signal?: AbortSignal) =>
-  fetchJson<ApiPagedResponse<MediaItem>>(createUrl('audios', { page, size, lang }), { signal })
-
-export const getFiles = (page = 0, size = 60, lang?: string, signal?: AbortSignal) =>
-  fetchJson<ApiPagedResponse<FileItem>>(createUrl('files', { page, size, lang }), { signal })

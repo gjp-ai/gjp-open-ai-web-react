@@ -13,8 +13,6 @@ export interface UIContextValue {
   toggleLanguage: () => void
   themeColor: ThemeColor
   setThemeColor: (color: ThemeColor) => void
-  searchQuery: string
-  setSearchQuery: (query: string) => void
 }
 
 export const UIContext = createContext<UIContextValue | undefined>(undefined)

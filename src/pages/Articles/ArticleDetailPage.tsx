@@ -2,9 +2,9 @@ import { useEffect, useState } from 'react'
 import hljs from 'highlight.js'
 import 'highlight.js/styles/github.css'
 import { useParams, Link } from 'react-router-dom'
-import { getArticleById } from '../../shared/data/openApi'
 import type { ArticleDetail } from '../../shared/data/types'
 import { useT } from '../../shared/i18n'
+import { getArticleById } from './articlesApi'
 import './articles.css'
 
 export const ArticleDetailPage = () => {

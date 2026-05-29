@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
-import { useUIContext } from '../contexts/useUIContext'
+import { useUIContext } from '../contexts/UIContext'
 import type { ThemeColor } from '../contexts/UIContext'
 
 const colorOptions: { value: ThemeColor; label: string; hex: string }[] = [
