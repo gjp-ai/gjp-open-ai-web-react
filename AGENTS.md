@@ -68,6 +68,7 @@ npm run check
 
 - `npm run lint`
 - `npm run format:check`
+- `npm run test`
 - `npm run build`
 
 ## Code Rules
@@ -83,6 +84,9 @@ npm run check
 - Page translations go in `src/pages/Xxx/i18n.ts` and register in `shared/i18n.ts`.
 - Keep visible text in the i18n registry. Config files should reference
   translation keys such as `labelKey`, not inline bilingual labels.
+- API-provided HTML must be sanitized through `shared/security/sanitizeHtml.ts`
+  before rendering. API-provided URLs used in `href`, `src`, embeds, downloads,
+  or media elements must be validated through `shared/security/safeUrl.ts`.
 - Keep `shared/data/openApi.ts` limited to reusable Open API client helpers.
 - Maintain `VITE_OPEN_API_BASE_URL` and `VITE_OPEN_API_CHANNEL` in `.env.*`.
 - Put page-owned endpoint functions in `src/pages/Xxx/xxxApi.ts`; put shared

@@ -39,6 +39,7 @@ npm run build         # Type-check and build production assets
 npm run lint          # Run ESLint
 npm run format        # Format source files with Prettier
 npm run format:check  # Check Prettier formatting
+npm run test          # Run Vitest tests
 npm run check         # Run lint, format:check, and build
 npm run preview       # Preview production build
 ```
@@ -78,6 +79,8 @@ src/
   app-aware composed components such as `SiteHeader`, `Footer`, and `Toolbar`.
 - Visible text belongs in the i18n registry. Config files should reference
   translation keys instead of inline bilingual labels.
+- API-provided HTML must go through `shared/security/sanitizeHtml.ts`, and
+  API-provided URLs must go through `shared/security/safeUrl.ts`.
 - Route-specific search text is owned by the page, not by global UI context.
 
 For detailed contribution and code-generation rules, see `AGENTS.md`.
