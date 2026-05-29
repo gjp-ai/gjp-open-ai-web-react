@@ -5,9 +5,7 @@ import { useUIContext } from '../UIContext'
 import { useT } from '../../i18n'
 import { getAppSettings } from './appSettingsApi'
 import { AppSettingsContext, type AppSettingsContextValue } from './appSettingsContextCore'
-
-const SETTINGS_CACHE_KEY = 'gjpapp_settings'
-const SETTINGS_FETCHED_FLAG = 'gjpapp_settings_fetched'
+import { APP_SETTINGS_CACHE_KEY, APP_SETTINGS_FETCHED_FLAG } from './appSettingsStorageKeys'
 
 export const AppSettingsProvider = ({ children }: { children: ReactNode }) => {
   const { language } = useUIContext()
@@ -18,13 +16,13 @@ export const AppSettingsProvider = ({ children }: { children: ReactNode }) => {
 
   const writeSettingsCache = useCallback((nextSettings: AppSetting[]) => {
     try {
-      localStorage.setItem(SETTINGS_CACHE_KEY, JSON.stringify(nextSettings))
+      localStorage.setItem(APP_SETTINGS_CACHE_KEY, JSON.stringify(nextSettings))
     } catch {
       // Ignore storage write errors.
     }
 
     try {
-      sessionStorage.setItem(SETTINGS_FETCHED_FLAG, '1')
+      sessionStorage.setItem(APP_SETTINGS_FETCHED_FLAG, '1')
     } catch {
       // Ignore storage write errors.
     }
@@ -42,7 +40,7 @@ export const AppSettingsProvider = ({ children }: { children: ReactNode }) => {
 
     try {
       try {
-        const cached = localStorage.getItem(SETTINGS_CACHE_KEY)
+        const cached = localStorage.getItem(APP_SETTINGS_CACHE_KEY)
         if (cached) {
           const parsed = JSON.parse(cached) as AppSetting[]
           setSettings(parsed)
@@ -51,7 +49,7 @@ export const AppSettingsProvider = ({ children }: { children: ReactNode }) => {
         // JSON parse error or localStorage access error: ignore and continue to fetch.
       }
 
-      if (!sessionStorage.getItem(SETTINGS_FETCHED_FLAG)) {
+      if (!sessionStorage.getItem(APP_SETTINGS_FETCHED_FLAG)) {
         await fetchAndCacheSettings()
       }
     } catch (err) {

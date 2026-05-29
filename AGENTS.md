@@ -76,6 +76,9 @@ npm run check
 - Page styles go in `src/pages/Xxx/xxx.css`; shared tokens stay in `index.css`.
 - Contexts use the **3-file pattern**; never put Provider logic in the Core file.
   Keep multi-file context features in one folder with an `index.ts` entrypoint.
+- Keep feature-owned browser storage keys in a feature-local `*StorageKeys.ts`
+  file, such as `appSettingsStorageKeys.ts` or `uiStorageKeys.ts`, instead of
+  inline in providers or in a broad global constants file.
 - Keep route-specific search text in the owning page, not in `UIContext`.
 - Page translations go in `src/pages/Xxx/i18n.ts` and register in `shared/i18n.ts`.
 - Keep visible text in the i18n registry. Config files should reference

@@ -1,9 +1,6 @@
 import { useEffect, useMemo, useState, useCallback, type ReactNode } from 'react'
 import { UIContext, type LanguageCode, type ThemeColor, type ThemeMode, type UIContextValue } from './uiContextCore'
-
-const THEME_STORAGE_KEY = 'gjp.theme'
-const LANGUAGE_STORAGE_KEY = 'gjp.language'
-const THEME_COLOR_STORAGE_KEY = 'gjp.themeColor'
+import { LANGUAGE_STORAGE_KEY, THEME_COLOR_STORAGE_KEY, THEME_STORAGE_KEY } from './uiStorageKeys'
 
 const getPreferredTheme = (): ThemeMode => {
   if (typeof window === 'undefined') {
